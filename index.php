@@ -141,8 +141,8 @@
                     <div class="col-lg-4">
                         <div class="team-member">
                             <img class="mx-auto rounded-circle" src="assets/img/team/3.jpg" alt="" />
-                            <h4>Diana Petersen</h4>
-                            <p class="text-muted">Lead Developer</p>
+                            <h4>Hidden</h4>
+                            <p class="text-muted">Captain</p>
                             <a class="btn btn-dark btn-social mx-2" href="#!"><i class="fab fa-twitter"></i></a>
                             <a class="btn btn-dark btn-social mx-2" href="#!"><i class="fab fa-facebook-f"></i></a>
                             <a class="btn btn-dark btn-social mx-2" href="#!"><i class="fab fa-linkedin-in"></i></a>
