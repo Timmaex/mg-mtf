@@ -19,7 +19,7 @@
 <!-- Navigation-->
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
     <div class="container">
-        <a class="navbar-brand js-scroll-trigger" href="#page-top"><img src="assets/img/navbar-logo.svg" alt=""/></a>
+        <a class="navbar-brand js-scroll-trigger" href="#page-top"><img src="assets/img/navbar-logo.png" alt=""/></a>
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
                 data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -30,6 +30,23 @@
             <ul class="navbar-nav text-uppercase ml-auto">
                 <li class="nav-item"><a class="nav-link js-scroll-trigger" href="index.php">Informationen</a></li>
                 <li class="nav-item"><a class="nav-link js-scroll-trigger" href="akte.php">Personalakte</a></li>
+                <?php
+                    if(isLoggedIn()) {
+                        $user = runQuery("SELECT * FROM mtf_user WHERE steamid64='".$_SESSION["steamid"]."'");
+                        $user = mysqli_fetch_array($user);
+                        echo '<img class="mx-auto rounded-circle float-left" width="7%" src="'.$user["avatarfull"].'" alt=""></img>';
+                        //echo $user["url"];
+                    } else {
+                            $button = array();
+
+                            $buttonstyle = "square";
+                            $button['rectangle'] = "0";
+                            $button['square'] = "01";
+                            $button = "<a href='login.php?login=true'><img src='https://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_".$button[$buttonstyle].".png'></a>";
+                            
+                            echo $button;                       
+                    }
+                ?>
             </ul>
         </div>
     </div>
@@ -43,10 +60,12 @@
             if(isset($header) && isset($subheader)) {
                 echo '<div class="masthead-subheading">'.$header.'<br>'.$subheader.'</div>';
             } else {
-                echo '<div class="masthead-subheading">Willkommen auf der MTF Website<br>Wir wünschen wir einen schönen Aufenthalt!</div>';
+                echo '<div class="masthead-subheading">Modern-Gaming SCP-RP Mobile Task Force<br>Wir wünschen dir einen schönen Aufenthalt!</div>';
             }
             
         ?>
 
     </div>
 </header>
+
+

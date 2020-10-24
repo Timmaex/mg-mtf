@@ -29,7 +29,7 @@
           $_SESSION['steamid'] = $matches[1];
           require 'steamauth/userInfo.php';
 
-          $db_res = runQuery("SELECT * FROM mtf_user WHERE steamid32='".$steamprofile['steamid']."'");
+          $db_res = runQuery("SELECT * FROM mtf_user WHERE steamid64='".$steamprofile['steamid']."'");
 
           if (!$db_res) {
               printf("Error: %s\n", mysqli_error($db));
@@ -46,7 +46,7 @@
           $sid32 = toSteamID($sid64);
 
           if(is_null($row["id"])){
-            runQuery("INSERT INTO mtf_user (name, url, steamid64, steamid32, avatarfull) VALUES ('". $steamname ."', '". $profile ."', '". $sid32 ."', '". $sid64 ."', '". $avatar ."')");            
+            runQuery("INSERT INTO mtf_user (name, url, steamid64, steamid32, avatarfull, mg_profile) VALUES ('". $steamname ."', '". $profile ."', '". $sid64 ."', '". $sid32 ."', '". $avatar ."', '')");            
           }          
           //userExists($steamprofile['steamid']);
 

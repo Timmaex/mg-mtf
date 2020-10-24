@@ -3,65 +3,64 @@
 <html lang="en">
 
 <?php 
-    require("system/navbar.php");
     require("system/database.php");
+    require("system/navbar.php");
 
-    $rankByShort = array(
-        "r" => "Rekrut",
-        "pvt" => "Private",
-        "pfc" => "Private First Class",
-        "spc" => "Specialist",
-        "lcpl" => "Lance Corporal",
-        "cpl" => "Corporal",
 
-        "sgt" => "Sergeant",
-        "ssgt" => "Staff Sergeant",
-        "sfc" => "Sergeant First Class",
-        "fsg" => "First Sergeant",
-        "sgm" => "Sergeant Major",
-        "csm" => "Command Sergeant Major",
+    if(isset($_GET["information"])) {
 
-        "2lt" => "2. Lieutenant",
-        "1lt" => "1. Lieutenant",
-        "cpt" => "Captain",
-        "maj" => "Major",
-        "lcol" => "Lieutenant Colonel",
-        "col" => "Colonel"
-    );
+        $info = runQuery("SELECT * FROM mtf_einheiten WHERE shortname='".$_GET["information"]."'");
+
+
+
+
+        $info = mysqli_fetch_array($info);
+
+        ?>
+            <div class="text-center">
+                <center>
+                    <div class="col-md-10">
+                        <br>
+                        <h2 class="section-heading text-uppercase"><?php echo $info["titel"]; ?></h2>
+                        <br>
+                        <h5 class="text-muted"><?php echo $info["info"]; ?></h5>
+                    </div>
+                </center>
+            </div>
+        <?php
+
+        return;
+    }
+
 ?>
+
 
 <!-- Services-->
 <section class="page-section" id="services">
     <div class="container">
         <div class="text-center">
             <h2 class="section-heading text-uppercase">Die MTF Einheiten</h2>
-            <h3 class="section-subheading text-muted">Dies sind die 3 derzeitigen Einheiten der Mobile Task Force</h3>
+            <h3 class="section-subheading text-muted">Dies sind die 3 derzeitigen Einheiten der Mobile Task Force<br>Klicke auf eines der 3 Einheitssymbole, um mehr Informationen über diese zu erhalten.</h3>
         </div>
         <div class="row text-center">
-            <div class="col-md-4">
-                        <span class="fa-stack fa-8x unitcircle">
-                            <img src="http://scp-wiki.wdfiles.com/local--resized-images/task-forces/Epsilon6village.png/small.jpg"
-                                 alt=""/>
-                        </span>
-                <h4 class="my-3">MTF Epsillon-6</h4>
-                <p class="text-muted">-Dies ist die E6-</p>
-            </div>
-            <div class="col-md-4">
-                        <span class="fa-stack fa-8x unitcircle">
-                            <img src="http://scp-wiki.wdfiles.com/local--resized-images/task-forces/Nu7.png/small.jpg"
-                                 alt=""/>
-                        </span>
-                <h4 class="my-3">MTF Nu-7</h4>
-                <p class="text-muted">-Dies ist die Nu7-</p>
-            </div>
-            <div class="col-md-4">
-                        <span class="fa-stack fa-8x unitcircle">
-                            <img src="http://scp-wiki.wdfiles.com/local--resized-images/task-forces/Delta5.png/small.jpg"
-                                 alt=""/>
-                        </span>
-                <h4 class="my-3">MTF Delta-5</h4>
-                <p class="text-muted">-Dies ist die D5-</p>
-            </div>
+
+        <?php
+            $kek = runQuery("SELECT * FROM mtf_einheiten");
+
+            while($row = mysqli_fetch_assoc($kek)) {
+                ?>
+                    <div class="col-md-4">
+                            <a href="index.php?information=<?php echo $row["shortname"]; ?>">
+                                <span class="fa-stack fa-8x unitcircle">
+                                    <img src="assets/img/einheiten/<?php echo $row["shortname"]; ?>.jpg"
+                                         alt=""/>
+                                </span>
+                            </a>
+                        <h4 class="my-3"><?php echo $row["name"] ?></h4>
+                    </div>
+                <?php
+            }
+        ?> 
         </div>
     </div>
 </section>
@@ -78,21 +77,29 @@
 
             while($row = mysqli_fetch_assoc($kek)) {
                 $user = runQuery("SELECT * FROM mtf_user WHERE steamid32='".$row["steamid"]."'");
-                $uer = mysqli_fetch_array($user);
-                if(!empty($user)) {
+                if(mysqli_num_rows($user) == 0) {
                     $user = array(
-                        "profile" => "index.php",
+                        "url" => "index.php",
+                        "avatarfull" => "index.php",
                     );
+                } else {
+                    $user = mysqli_fetch_array($user);
                 }
+
                 ?>
                 <div class="col-lg-6">
                     <div class="team-member">
                         <img class="mx-auto rounded-circle"
-                             src="https://modern-gaming.net/images/avatars/68/14152-6813c55149add5ff1d59e9d92c8ed025c65e270f.png"
+                             src="<?php echo $user["avatarfull"]; ?>"
                              alt=""/>
-                        <h4><?php echo $row["codename"]; ?></h4>
+                        <h4><?php echo getFullMTFName($row["steamid"]); ?></h4>
                         <p class="text-muted"><?php echo $rankByShort[$row["rank"]]; ?></p>
-                        <a class="btn btn-dark btn-social mx-2" href="<?php echo $user['profile']; ?>" target="_blank"><i class="fab fa-steam"></i></a>
+                        <a class="btn btn-dark btn-social mx-2" href="<?php echo $user['url']; ?>" target="_blank"><i class="fab fa-steam"></i></a>
+                        <?php
+                            if(isset($user["mg_profile"]) && $user["mg_profile"] != "") {
+                                echo '<a class="btn btn-dark btn-social mx-2" href="'.$user['mg_profile'].'" target="_blank"><i class="fa fa-globe"></i></a>';
+                            }
+                        ?>
                     </div>
                 </div>
                 <?php
@@ -111,76 +118,45 @@
             <h3 class="section-subheading text-muted">Dies sind die aktuellen Offiziere der MTF</h3>
         </div>
         <div class="row">
-            <div class="col-lg-4">
-                <div class="team-member">
-                    <img class="mx-auto rounded-circle"
-                         src="https://modern-gaming.net/images/avatars/68/14152-6813c55149add5ff1d59e9d92c8ed025c65e270f.png"
-                         alt=""/>
-                    <h4>Wobba | "Ackerman"</h4>
-                    <p class="text-muted">MTF Colonel</p>
-                    <a class="btn btn-dark btn-social mx-2" href="#!"><i class="fab fa-twitter"></i></a>
-                    <a class="btn btn-dark btn-social mx-2" href="#!"><i class="fab fa-facebook-f"></i></a>
-                    <a class="btn btn-dark btn-social mx-2" href="#!"><i class="fab fa-linkedin-in"></i></a>
+        <?php
+            $kek = runQuery("SELECT * FROM mtf_character WHERE rank='col' OR rank='lcol' OR rank='maj' OR rank='cpt' OR rank='1lt' OR rank='2lt' ORDER BY FIELD(rank, 'col', 'lcol', 'maj', 'cpt', '1lt', '2lt')");
+
+            while($row = mysqli_fetch_assoc($kek)) {
+                $user = runQuery("SELECT * FROM mtf_user WHERE steamid32='".$row["steamid"]."'");
+                if(mysqli_num_rows($user) == 0) {
+                    $user = array(
+                        "url" => "index.php",
+                        "avatarfull" => "assets/img/einheiten/pb_".$row["job"].".png",
+                    );
+                } else {
+                    $user = mysqli_fetch_array($user);
+                }
+
+                ?>
+                <div class="col-lg-4">
+                    <div class="team-member">
+                        <img class="mx-auto rounded-circle"
+                             src="<?php echo $user["avatarfull"]; ?>"
+                             alt=""/>
+                        <h4><?php echo getFullMTFName($row["steamid"]); ?></h4>
+                        <p class="text-muted"><?php echo $rankByShort[$row["rank"]]; ?></p>
+                        <a class="btn btn-dark btn-social mx-2" href="<?php echo $user['url']; ?>" target="_blank"><i class="fab fa-steam"></i></a>
+                        <?php
+                            if(isset($user["mg_profile"]) && $user["mg_profile"] != "") {
+                                echo '<a class="btn btn-dark btn-social mx-2" href="'.$user['mg_profile'].'" target="_blank"><i class="fa fa-globe"></i></a>';
+                            }
+                        ?>
+                    </div>
                 </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="team-member">
-                    <img class="mx-auto rounded-circle"
-                         src="https://modern-gaming.net/images/avatars/0a/15508-0a8719930978e2c20583700e1b435ba56ef37627.png"
-                         alt=""/>
-                    <h4>M1tsinn | "Rho"</h4>
-                    <p class="text-muted">MTF Lieutenant Colonel</p>
-                    <a class="btn btn-dark btn-social mx-2" href="#!"><i class="fab fa-twitter"></i></a>
-                    <a class="btn btn-dark btn-social mx-2" href="#!"><i class="fab fa-facebook-f"></i></a>
-                    <a class="btn btn-dark btn-social mx-2" href="#!"><i class="fab fa-linkedin-in"></i></a>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="team-member">
-                    <img class="mx-auto rounded-circle" src="assets/img/team/3.jpg" alt=""/>
-                    <h4>Hidden</h4>
-                    <p class="text-muted">Captain</p>
-                    <a class="btn btn-dark btn-social mx-2" href="#!"><i class="fab fa-twitter"></i></a>
-                    <a class="btn btn-dark btn-social mx-2" href="#!"><i class="fab fa-facebook-f"></i></a>
-                    <a class="btn btn-dark btn-social mx-2" href="#!"><i class="fab fa-linkedin-in"></i></a>
-                </div>
-            </div>
+                <?php
+            }
+        ?> 
         </div>
-        <div class="row">
-            <div class="col-lg-8 mx-auto text-center">
-                <p class="large text-muted">Bottom text</p>
-            </div>
-        </div>
+
     </div>
 </section>
-<!-- Footer-->
-<footer class="footer py-4">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-4 text-lg-left">Copyright © Modern-Gaming.net 2020</div>
-            <div class="col-lg-4 my-3 my-lg-0">
-                <a class="btn btn-dark btn-social mx-2" href="#!"><i class="fab fa-twitter"></i></a>
-                <a class="btn btn-dark btn-social mx-2" href="#!"><i class="fab fa-facebook-f"></i></a>
-                <a class="btn btn-dark btn-social mx-2" href="#!"><i class="fab fa-linkedin-in"></i></a>
-            </div>
-            <div class="col-lg-4 text-lg-right">
-                <a class="mr-3" href="#!">Privacy Policy</a>
-                <a href="#!">Terms of Use</a>
-            </div>
-        </div>
-    </div>
-</footer>
-<!-- Portfolio Modals-->
 
-<!-- Bootstrap core JS-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
-<!-- Third party plugin JS-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
-<!-- Contact form JS-->
-<script src="assets/mail/jqBootstrapValidation.js"></script>
-<script src="assets/mail/contact_me.js"></script>
-<!-- Core theme JS-->
-<script src="js/scripts.js"></script>
+    <?php require("system/footer.php"); ?>
+
 </body>
 </html>
