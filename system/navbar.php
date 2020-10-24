@@ -58,9 +58,9 @@
     <div class="container">
         <?php
             if(isset($header) && isset($subheader)) {
-                echo '<div class="masthead-subheading">'.$header.'<br>'.$subheader.'</div>';
+                echo '<div style="margin-bottom: -30%;" class="masthead-subheading">'.$header.'<br>'.$subheader.'</div>';
             } else {
-                echo '<div class="masthead-subheading">Modern-Gaming SCP-RP Mobile Task Force<br>Wir wünschen dir einen schönen Aufenthalt!</div>';
+                echo '<div style="margin-bottom: -30%;" class="masthead-subheading">Modern-Gaming SCP-RP Mobile Task Force<br>Wir wünschen dir einen schönen Aufenthalt!</div>';
             }
             
         ?>
