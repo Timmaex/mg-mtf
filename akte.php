@@ -46,8 +46,39 @@
 
 			   <div class="container">
 			        <div class="text-center">
-			            <h2 class="section-heading text-uppercase">NICHT EINGELOGGT</h2>
-			            <h3 class="section-subheading text-muted">Um deine eigene Akte zu sehen, musst du mich mit Steam anmelden.</h3>
+
+
+
+
+
+
+
+
+
+<div class="container">
+			                        	<br><br><br>
+                        	<div class="row">
+                        		<div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
+                        			<div class="panel panel-danger">
+										<div class="panel-heading">
+											<i class="fas fa-sign-in"></i> Bitte Anmelden										</div>
+
+										<div class="panel-body text-center">
+											<h4 style="margin-top:0;" class="page-header">Du musst angemeldet sein, um diese Seite zu sehen</h4>Du erhälst Zugang zu deinen Statistiken, Banns, Verwarnungen, Käufen, Tickets und vielem mehr.										</div>
+									</div>
+                        		</div>
+                        	</div>
+
+							<br><br>
+								</div>
+
+
+
+
+
+
+
+
 			            <?php
 			            	$button = array();
 

@@ -115,10 +115,10 @@
                         
                         <?php
                             if(isset($user["url"])) {
-                                echo '<a class="btn btn-dark btn-social mx-2" href="'.$user['url'].'" target="_blank"><i class="fab fa-steam"></i></a>';
+                                echo '<a class="btn btn-info btn-social mx-2" href="'.$user['url'].'" target="_blank"><i class="fab fa-steam"></i></a>';
                             }
                             if(isset($user["mg_profile"]) && $user["mg_profile"] != "") {
-                                echo '<a class="btn btn-dark btn-social mx-2" href="'.$user['mg_profile'].'" target="_blank"><i class="fa fa-globe"></i></a>';
+                                echo '<a class="btn btn-info btn-social mx-2" href="'.$user['mg_profile'].'" target="_blank"><i class="fa fa-globe"></i></a>';
                             }
                         ?>
                     </div>
@@ -162,10 +162,10 @@
                         <p class="text-muted"><?php echo $rankByShort[$row["rank"]]; ?></p>
                         <?php
                             if(isset($user["url"])) {
-                                echo '<a class="btn btn-dark btn-social mx-2" href="'.$user['url'].'" target="_blank"><i class="fab fa-steam"></i></a>';
+                                echo '<a class="btn btn-info btn-social mx-2" href="'.$user['url'].'" target="_blank"><i class="fab fa-steam"></i></a>';
                             } 
                             if(isset($user["mg_profile"]) && $user["mg_profile"] != "") {
-                                echo '<a class="btn btn-dark btn-social mx-2" href="'.$user['mg_profile'].'" target="_blank"><i class="fa fa-globe"></i></a>';
+                                echo '<a class="btn btn-info btn-social mx-2" href="'.$user['mg_profile'].'" target="_blank"><i class="fa fa-globe"></i></a>';
                             }
                         ?>
                     </div>
