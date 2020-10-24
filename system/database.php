@@ -1,12 +1,7 @@
 <?php
-	$MySQL = array(
-		"host" => "127.0.0.1",
-		"user" => "user",
-		"database" => "db",
-		"password" => "pw",
-	);
-
-	$db = mysqli_connect($MySQL["host"], $MySQL["user"], $MySQL["password"], $MySQL["database"]);
+	require("steamapi.php");
+	session_start();
+	$db = mysqli_connect("localhost", "mtf", "mImdfhoxdGM2mdpD", "mtf_site");
 
 	if (!$db) {
 	    echo "Fehler: konnte nicht mit MySQL verbinden." . PHP_EOL;
@@ -21,4 +16,9 @@
 		return $db_res;
 	}
 
+	function isLoggedIn() {
+		return isset($_SESSION["steamid"]);
+	}
+
 ?>
+

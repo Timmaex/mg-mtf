@@ -1,50 +1,35 @@
 <!-- test -->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-    <meta name="description" content=""/>
-    <meta name="author" content=""/>
-    <title>MG MTF | Mobile Task Force</title>
-    <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico"/>
-    <!-- Font Awesome icons (free version)-->
-    <script src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" crossorigin="anonymous"></script>
-    <!-- Google fonts-->
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css"/>
-    <link href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic" rel="stylesheet"
-          type="text/css"/>
-    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css"/>
-    <!-- Core theme CSS (includes Bootstrap)-->
-    <link href="css/styles.css" rel="stylesheet"/>
-</head>
-<body id="page-top">
-<!-- Navigation-->
-<nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
-    <div class="container">
-        <a class="navbar-brand js-scroll-trigger" href="#page-top"><img src="assets/img/navbar-logo.svg" alt=""/></a>
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
-                data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
-                aria-label="Toggle navigation">
-            Menu
-            <i class="fas fa-bars ml-1"></i>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav text-uppercase ml-auto">
-                <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#services">MTF Einheiten</a></li>
-                <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#team">Offiziere</a></li>
-                <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#contact">Kontakt</a></li>
-            </ul>
-        </div>
-    </div>
-</nav>
-<!-- Masthead-->
-<header class="masthead">
-    <div class="container">
-        <div class="masthead-subheading">Willkommen auf der MTF Website<br>Wir wünschen wir einen schönen Aufenthalt!
-        </div>
-    </div>
-</header>
+
+<?php 
+    require("system/navbar.php");
+    require("system/database.php");
+
+    $rankByShort = array(
+        "r" => "Rekrut",
+        "pvt" => "Private",
+        "pfc" => "Private First Class",
+        "spc" => "Specialist",
+        "lcpl" => "Lance Corporal",
+        "cpl" => "Corporal",
+
+        "sgt" => "Sergeant",
+        "ssgt" => "Staff Sergeant",
+        "sfc" => "Sergeant First Class",
+        "fsg" => "First Sergeant",
+        "sgm" => "Sergeant Major",
+        "csm" => "Command Sergeant Major",
+
+        "2lt" => "2. Lieutenant",
+        "1lt" => "1. Lieutenant",
+        "cpt" => "Captain",
+        "maj" => "Major",
+        "lcol" => "Lieutenant Colonel",
+        "col" => "Colonel"
+    );
+?>
+
 <!-- Services-->
 <section class="page-section" id="services">
     <div class="container">
@@ -88,30 +73,34 @@
             <h3 class="section-subheading text-muted">Dies ist die aktuelle Leitung der MTF</h3>
         </div>
         <div class="row">
-            <div class="col-lg-6">
-                <div class="team-member">
-                    <img class="mx-auto rounded-circle"
-                         src="https://modern-gaming.net/images/avatars/68/14152-6813c55149add5ff1d59e9d92c8ed025c65e270f.png"
-                         alt=""/>
-                    <h4>Wobba | "Ackerman"</h4>
-                    <p class="text-muted">MTF Colonel</p>
-                    <a class="btn btn-dark btn-social mx-2" href="#!"><i class="fab fa-twitter"></i></a>
-                    <a class="btn btn-dark btn-social mx-2" href="#!"><i class="fab fa-facebook-f"></i></a>
-                    <a class="btn btn-dark btn-social mx-2" href="#!"><i class="fab fa-linkedin-in"></i></a>
+        <?php
+            $kek = runQuery("SELECT * FROM mtf_character WHERE rank='col' OR rank='lcol'");
+
+            while($row = mysqli_fetch_assoc($kek)) {
+                $user = runQuery("SELECT * FROM mtf_user WHERE steamid32='".$row["steamid"]."'");
+                $uer = mysqli_fetch_array($user);
+                if(!empty($user)) {
+                    $user = array(
+                        "profile" => "index.php",
+                    );
+                }
+                ?>
+                <div class="col-lg-6">
+                    <div class="team-member">
+                        <img class="mx-auto rounded-circle"
+                             src="https://modern-gaming.net/images/avatars/68/14152-6813c55149add5ff1d59e9d92c8ed025c65e270f.png"
+                             alt=""/>
+                        <h4><?php echo $row["codename"]; ?></h4>
+                        <p class="text-muted"><?php echo $rankByShort[$row["rank"]]; ?></p>
+                        <a class="btn btn-dark btn-social mx-2" href="<?php echo $user['profile']; ?>" target="_blank"><i class="fab fa-steam"></i></a>
+                    </div>
                 </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="team-member">
-                    <img class="mx-auto rounded-circle"
-                         src="https://modern-gaming.net/images/avatars/0a/15508-0a8719930978e2c20583700e1b435ba56ef37627.png"
-                         alt=""/>
-                    <h4>M1tsinn | "Rho"</h4>
-                    <p class="text-muted">MTF Lieutenant Colonel</p>
-                    <a class="btn btn-dark btn-social mx-2" href="#!"><i class="fab fa-twitter"></i></a>
-                    <a class="btn btn-dark btn-social mx-2" href="#!"><i class="fab fa-facebook-f"></i></a>
-                    <a class="btn btn-dark btn-social mx-2" href="#!"><i class="fab fa-linkedin-in"></i></a>
-                </div>
-            </div>
+                <?php
+            }
+        ?> 
+
+
+
         </div>
 </section>
 <!-- Team-->

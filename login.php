@@ -1,7 +1,6 @@
 <?php 
   ob_start();
-  session_start();
-  //require 'system/database.php';
+  require 'system/database.php';
 
   if (isset($_GET['logout'])){
     require 'steamauth/SteamConfig.php';
@@ -30,7 +29,7 @@
           $_SESSION['steamid'] = $matches[1];
           require 'steamauth/userInfo.php';
 
-          $db_res = runQuery("SELECT * FROM mtf_user WHERE steamid='".$steamprofile['steamid']."'");
+          $db_res = runQuery("SELECT * FROM mtf_user WHERE steamid32='".$steamprofile['steamid']."'");
 
           if (!$db_res) {
               printf("Error: %s\n", mysqli_error($db));
@@ -39,13 +38,15 @@
 
           $row = mysqli_fetch_array($db_res);
 
-          $sn = $steamprofile["personaname"];
-          $pu = $steamprofile["profileurl"];
-          $si = $steamprofile["steamid"];
-          $av = $steamprofile["avatarfull"];
+          $steamname = $steamprofile["personaname"];
+          $profile = $steamprofile["profileurl"];
+          $sid64 = $steamprofile["steamid"];
+          $avatar = $steamprofile["avatarfull"];
+
+          $sid32 = toSteamID($sid64);
 
           if(is_null($row["id"])){
-            runQuery("INSERT INTO mtf_user (name, url, steamid, avatar) VALUES ('". $sn ."', '". $pu ."', '". $si ."', '". $av ."')");            
+            runQuery("INSERT INTO mtf_user (name, url, steamid64, steamid32, avatarfull) VALUES ('". $steamname ."', '". $profile ."', '". $sid32 ."', '". $sid64 ."', '". $avatar ."')");            
           }          
           //userExists($steamprofile['steamid']);
 
