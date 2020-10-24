@@ -1,7 +1,7 @@
 <?php
 	require("steamapi.php");
 	session_start();
-	$db = mysqli_connect("localhost", "mtf", "mImdfhoxdGM2mdpD", "mtf_site");
+	$db = mysqli_connect("84.59.133.60", "mtf", "mImdfhoxdGM2mdpD", "mtf_site");
 
 	if (!$db) {
 	    echo "Fehler: konnte nicht mit MySQL verbinden." . PHP_EOL;
