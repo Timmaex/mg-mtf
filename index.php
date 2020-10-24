@@ -55,7 +55,7 @@
         <div class="row text-center">
             <div class="col-md-4">
                         <span class="fa-stack fa-8x unitcircle">
-                            <img src="http://scp-wiki.wdfiles.com/local--resized-images/task-forces/Epsilon6.png/small.jpg"
+                            <img src="http://scp-wiki.wdfiles.com/local--resized-images/task-forces/Epsilon6village.png/small.jpg"
                                  alt=""/>
                         </span>
                 <h4 class="my-3">MTF Epsillon-6</h4>
