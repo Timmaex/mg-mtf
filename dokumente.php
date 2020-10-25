@@ -12,28 +12,17 @@
 
 	<?php
 
+	if(isset($_GET["dokument"])) {
+		$kek = runQuery("SELECT value FROM mtf_dokumente WHERE short='".$_GET["dokument"]."'");
+		$kek = mysqli_fetch_array($kek);
+		echo $kek["value"];
+		require("system/footer.php");
+		return;
+	}
 
 
-	//echo getSteamID32()."<br>";
-	//echo getRankByShortname("lcol")."<br>";
-	//echo getRankByShortname(getRankByID(getRankIDByName("col")))."<br>";
-	//echo getRankByShortname(getRankByID(6))."<br>";
 
 
-		if(isLoggedIn() == true) {
-
-       
-		} else {
-			// nicht eingeloggt der homo
-
-			?>
-
-
-			<?php
-		}
-		?>
-
-<?php
 	// Convert all documents to be sorted by category
 
 	$documents = runQuery("SELECT * FROM mtf_dokumente");
@@ -57,18 +46,19 @@
 		    <div class="row text-center">
 		    <?php
 		    	foreach ($v as $key => $value) {
-		    		if($value["restriction"] > getRankIDByName(getUserRank())) { return; }
+		    		if($value["restriction"] > getRankIDByName(getUserRank())) { continue; }
 		    		?>
 			        <div class="col-lg-4">
 			            <h4 class="my-3 text-black"><?php echo $value["header"] ?></h4>
 			            <h3 class="section-subheading text-muted"><?php echo $value["info"] ?></h3>
-			        	<a class="btn btn-primary" role="button" href="dokumente.php?dokument=<?php echo $value["short"]; ?>">Mehr Infos</a>
+			        	<a class="btn btn-primary" role="button" <?php if($value["typ"] == "external") { echo 'target="_blank"'; } ?> href="<?php if($value["typ"] == "external") { echo $value["value"]; } else { echo "dokumente.php?dokument=".$value["short"]; }?>">Öffnen</a>
 			        </div>
 			        <?php
 		    	}
 	    	?>
 			</div>
 		</div>
+		<br>
 		<?php
 	}
 ?>

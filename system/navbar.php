@@ -39,7 +39,7 @@
                     if(isLoggedIn()) {
                         $user = runQuery("SELECT * FROM mtf_user WHERE steamid64='".$_SESSION["steamid"]."'");
                         $user = mysqli_fetch_array($user);
-                        echo '<img class="mx-auto rounded-circle float-left" width="3%" src="'.$user["avatarfull"].'" alt=""></img>';
+                        echo '<img class="mx-auto rounded-circle float-left" width="5%" src="'.$user["avatarfull"].'" alt=""><a href="#"></a></img>';
                         //echo $user["url"];
                     } else {
                             $button = array();

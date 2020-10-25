@@ -15,9 +15,6 @@
 	function runQuery($sql) {
 		global $db;
 		$res = mysqli_query($db, $sql);
-		if(true && !$res) {
-			mysqli_query($db, "INSERT INTO mysql_debug (sql, error) VALUES ('".$sql."', '".mysqli_error()."')");
-		}
 		return $res;
 	}
 
