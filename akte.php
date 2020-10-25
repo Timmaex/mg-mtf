@@ -55,22 +55,40 @@
 
 
 
-<div class="container">
-			                        	<br><br><br>
+						<div class="container">
+			                <br><br><br>
                         	<div class="row">
-                        		<div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
-                        			<div class="panel panel-danger">
-										<div class="panel-heading">
-											<i class="fas fa-sign-in"></i> Bitte Anmelden										</div>
-
+                        		<div style="border-color: red;" class="col-md-12 col-md-offset-4 col-sm-6 col-sm-offset-3">
+                        			<div class="panel panel-danger" style="border: 2px solid red;">
+										<div class="panel-heading text-white" style="background-color: red; padding: 5px;">
+											<i class="fa fa-sign-in "></i> Bitte Anmelden
+										</div>
+									
 										<div class="panel-body text-center">
-											<h4 style="margin-top:0;" class="page-header">Du musst angemeldet sein, um diese Seite zu sehen</h4>Du erhälst Zugang zu deinen Statistiken, Banns, Verwarnungen, Käufen, Tickets und vielem mehr.										</div>
+											<h4 style="margin-top:0;" class="page-header"><br>Du musst angemeldet sein, um diese Seite zu sehen</h4>
+												<hr> </hr>
+											Du erhälst Zugang zu deiner Akte, Informationen, Dokumente und der Aktenverwaltung, falls dein Rang dies zulässt.
+											<br>
+											<br>
+
+									            <?php
+									            	$button = array();
+
+													$buttonstyle = "square";
+													$button['rectangle'] = "01";
+													$button['square'] = "02";
+													$button = "<a href='login.php?login=true'><img src='https://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_".$button[$buttonstyle].".png'></a>";
+													
+													echo $button;
+									            ?>
+									        <br>
+									        <br>
+
+										</div>
 									</div>
                         		</div>
                         	</div>
-
-							<br><br>
-								</div>
+						</div>
 
 
 
@@ -79,16 +97,6 @@
 
 
 
-			            <?php
-			            	$button = array();
-
-							$buttonstyle = "square";
-							$button['rectangle'] = "01";
-							$button['square'] = "02";
-							$button = "<a href='login.php?login=true'><img src='https://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_".$button[$buttonstyle].".png'></a>";
-							
-							echo $button;
-			            ?>
 			        </div>
 			    </div>
 
