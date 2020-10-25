@@ -59,7 +59,7 @@
     <div class="container">
         <div class="text-center">
             <h2 class="section-heading text-uppercase">Die MTF Einheiten</h2>
-            <h3 class="section-subheading text-muted">Dies sind die 3 derzeitigen Einheiten der Mobile Task Force<br>Klicke auf eines der 3 Einheitssymbole, um mehr Informationen über diese zu erhalten.</h3>
+            <h3 class="section-subheading text-muted">Dies sind die 3 derzeitigen Einheiten der Mobile Task Force.</h3>
         </div>
         <div class="row text-center">
 
@@ -69,13 +69,14 @@
             while($row = mysqli_fetch_assoc($kek)) {
                 ?>
                     <div class="col-md-4">
-                            <a href="index.php?information=<?php echo $row["shortname"]; ?>">
+                            
                                 <span class="fa-stack fa-8x unitcircle">
                                     <img src="assets/img/einheiten/<?php echo $row["shortname"]; ?>.jpg"
                                          alt=""/>
                                 </span>
-                            </a>
+                            
                         <h4 class="my-3"><?php echo $row["name"] ?></h4>
+                        <a class="btn btn-primary" role="button" href="index.php?information=<?php echo $row["shortname"]; ?>">Mehr Infos</a>
                     </div>
                 <?php
             }
@@ -84,7 +85,7 @@
     </div>
 </section>
 <!-- Leitung-->
-<section class="page-section bg-dark text-white" id="team">
+<section class="page-section bg-dark text-white" id="leitung">
     <div class="container">
         <div class="text-center">
             <h2 class="section-heading text-uppercase">MTF LEITUNG</h2>
@@ -92,7 +93,8 @@
         </div>
         <div class="row">
         <?php
-            $kek = runQuery("SELECT * FROM mtf_character WHERE rank='col' OR rank='lcol' ORDER BY FIELD(rank, 'col', 'lcol')");
+            $kek = runQuery("SELECT * FROM mtf_character WHERE rank='col' OR rank='lcol' OR rank='maj' ORDER BY FIELD(rank, 'col', 'lcol', 'maj')");
+            $leitungen = mysqli_num_rows($kek);
 
             while($row = mysqli_fetch_assoc($kek)) {
                 $user = runQuery("SELECT * FROM mtf_user WHERE steamid32='".$row["steamid"]."'");
@@ -105,13 +107,13 @@
                 }
 
                 ?>
-                <div class="col-lg-6">
+                <div class="col-lg-<?php echo strval(12/$leitungen); ?>">
                     <div class="team-member">
                         <img class="mx-auto rounded-circle"
                              src="<?php echo $user["avatarfull"]; ?>"
                              alt=""/>
                         <h4><?php echo getFullMTFName($row["steamid"]); ?></h4>
-                        <p class="text-muted"><?php echo $rankByShort[$row["rank"]]; ?></p>
+                        <p class="text-muted"><?php echo getRankByShortname($row["rank"]) . " | MTF " . getFullJobname($row["job"]); ?></p>
                         
                         <?php
                             if(isset($user["url"])) {
@@ -131,8 +133,9 @@
 
         </div>
 </section>
-<!-- Team-->
-<section class="page-section bg-light" id="team">
+
+<!-- Offiziere -->
+<section class="page-section bg-light" id="offiziere">
     <div class="container">
         <div class="text-center">
             <h2 class="section-heading text-uppercase">OFFIZIERSSTAB</h2>
@@ -159,7 +162,7 @@
                              src="<?php echo $user["avatarfull"]; ?>"
                              alt=""/>
                         <h4><?php echo getFullMTFName($row["steamid"]); ?></h4>
-                        <p class="text-muted"><?php echo $rankByShort[$row["rank"]]; ?></p>
+                        <p class="text-muted"><?php echo getRankByShortname($row["rank"]) . " | MTF " . getFullJobname($row["job"]); ?></p>
                         <?php
                             if(isset($user["url"])) {
                                 echo '<a class="btn btn-info btn-social mx-2" href="'.$user['url'].'" target="_blank"><i class="fab fa-steam"></i></a>';

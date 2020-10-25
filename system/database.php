@@ -1,30 +1,9 @@
 <?php
-
-    $rankByShort = array(
-        "r" => "Rekrut",
-        "pvt" => "Private",
-        "pfc" => "Private First Class",
-        "spc" => "Specialist",
-        "lcpl" => "Lance Corporal",
-        "cpl" => "Corporal",
-
-        "sgt" => "Sergeant",
-        "ssgt" => "Staff Sergeant",
-        "sfc" => "Sergeant First Class",
-        "fsg" => "First Sergeant",
-        "sgm" => "Sergeant Major",
-        "csm" => "Command Sergeant Major",
-
-        "2lt" => "2. Lieutenant",
-        "1lt" => "1. Lieutenant",
-        "cpt" => "Captain",
-        "maj" => "Major",
-        "lcol" => "Lieutenant Colonel",
-        "col" => "Colonel"
-    );
-
 	require("steamapi.php");
+	require("rankvars.php");
+
 	session_start();
+
 	$db = mysqli_connect("84.59.133.60", "mtf", "mImdfhoxdGM2mdpD", "mtf_site");
 
 	if (!$db) {
@@ -36,8 +15,7 @@
 
 	function runQuery($sql) {
 		global $db;
-		$db_res = mysqli_query($db, $sql);
-		return $db_res;
+		return mysqli_query($db, $sql);
 	}
 
 	function isLoggedIn() {
@@ -46,9 +24,44 @@
 
 	function getFullMTFName($steamid) {
 		$data = runQuery("SELECT * FROM mtf_character WHERE steamid='".$steamid."' LIMIT 1");
+		if(mysqli_num_rows($data) == 0) { return "BENUTZER EXISTIERT NICHT"; }
 		$row = mysqli_fetch_array($data);
-		return ucfirst($row["job"]) . " " . strval($row["dienstnummer"]) . " " . $row["codename"];
+		return ucfirst($row["job"]) . " " . strval($row["dienstnummer"]) . " \"" . $row["codename"]."\"";
+	}
+
+	function getSteamID32() {
+		if(!isset($_SESSION["steamid"])) { return; }
+   		$s32 = runQuery("SELECT steamid32 FROM mtf_user WHERE steamid64='".$_SESSION["steamid"]."'");
+   		if(mysqli_num_rows($s32) == 0) { return; }
+   		$s32 = mysqli_fetch_array($s32);
+   		return $s32["steamid32"];
+	}
+
+	function getUserRank() {
+		$data = runQuery("SELECT rank FROM mtf_character WHERE steamid='".getSteamID32()."'");
+		if(mysqli_num_rows($data) == 0) { return 1; }
+		$data = mysqli_fetch_array($data);
+		return $data["rank"];
+	}
+
+	function getRankByShortname($short) {
+		global $rankByShort;
+		return $rankByShort[$short];
+	}
+
+	function getRankIDByName($name) {
+		global $RankIDByName;
+		return $RankIDByName[$name];
+	}
+
+	function getRankByID($id) {
+		global $rankByID;
+		return $rankByID[$id];
+	}
+
+	function getFullJobname($job) {
+		global $FullJobByJob;
+		return $FullJobByJob[$job];
 	}
 
 ?>
-

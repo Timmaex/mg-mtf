@@ -2,6 +2,10 @@
   ob_start();
   require 'system/database.php';
 
+  if(!isset($_GET["logout"]) or !isset($_GET["login"])) {
+    header("Location: index.php");
+  }
+
   if (isset($_GET['logout'])){
     require 'steamauth/SteamConfig.php';
     session_unset();

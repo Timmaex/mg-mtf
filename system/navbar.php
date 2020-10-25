@@ -15,6 +15,8 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css"/>
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="css/styles.css" rel="stylesheet"/>
+
+    <script src="ckeditor/ckeditor.js"></script>
 </head>
 <body id="page-top">
 <!-- Navigation-->
@@ -30,12 +32,14 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav text-uppercase ml-auto">
                 <li class="nav-item"><a class="nav-link js-scroll-trigger" href="index.php">Informationen</a></li>
+                <li class="nav-item"><a class="nav-link js-scroll-trigger" href="dokumente.php">Dokumente</a></li>
                 <li class="nav-item"><a class="nav-link js-scroll-trigger" href="akte.php">Personalakte</a></li>
+                <li class="nav-item"><a class="nav-link js-scroll-trigger" href="mitglieder.php">Mitglieder</a></li>
                 <?php
                     if(isLoggedIn()) {
                         $user = runQuery("SELECT * FROM mtf_user WHERE steamid64='".$_SESSION["steamid"]."'");
                         $user = mysqli_fetch_array($user);
-                        echo '<img class="mx-auto rounded-circle float-left" width="7%" src="'.$user["avatarfull"].'" alt=""></img>';
+                        echo '<img class="mx-auto rounded-circle float-left" width="3%" src="'.$user["avatarfull"].'" alt=""></img>';
                         //echo $user["url"];
                     } else {
                             $button = array();
