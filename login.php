@@ -3,7 +3,7 @@
   require 'system/database.php';
 
   if(!isset($_GET["logout"]) or !isset($_GET["login"])) {
-    header("Location: index.php");
+    //header("Location: index.php");
   }
 
   if (isset($_GET['logout'])){

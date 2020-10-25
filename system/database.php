@@ -38,8 +38,9 @@
 	}
 
 	function getUserRank() {
+		if(!isLoggedIn()) {return "r";}
 		$data = runQuery("SELECT rank FROM mtf_character WHERE steamid='".getSteamID32()."'");
-		if(mysqli_num_rows($data) == 0) { return 1; }
+		if(mysqli_num_rows($data) == 0) { return "r"; }
 		$data = mysqli_fetch_array($data);
 		return $data["rank"];
 	}
