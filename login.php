@@ -48,7 +48,7 @@
           $sid64 = $steamprofile["steamid"];
           $avatar = $steamprofile["avatarfull"];
 
-          $sid32 = toSteamID($sid64);
+          $sid32 = strval(toSteamID($_SESSION['steamid']));
 
           if(is_null($row["id"])){
             $kek = runQuery("INSERT INTO mtf_user (name, url, steamid64, steamid32, avatarfull, mg_profile) VALUES ('". $steamname ."', '". $profile ."', '". $sid64 ."', '". $sid32 ."', '". $avatar ."', '')");
