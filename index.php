@@ -17,6 +17,7 @@
         $info = mysqli_fetch_array($info);
 
         ?>
+        <section class="page-section" id="info">
             <div class="text-center">
                 <center>
                     <br>
@@ -43,8 +44,16 @@
                         <br>
                         <h5 class="text-muted"><?php echo $info["info"]; ?></h5>
                     </div>
+                    <br>
+                    <div class="col-md-10 text-center">
+                        <h4>
+                            Aktuelle Leitung
+                        <h4>
+                        <h6 class="text-muted"><?php echo "Leitung " . getFullMTFName($info["leitung"]) . "<br>". "StV. Leitung " . getFullMTFName($info["coleitung"]); ?></h6>
+                    </div>
                 </center>
             </div>
+        </section>
             <br><br>
         <?php
         require("system/footer.php"); 
@@ -64,7 +73,7 @@
         <div class="row text-center">
 
         <?php
-            $kek = runQuery("SELECT * FROM mtf_einheiten");
+            $kek = runQuery("SELECT * FROM mtf_einheiten ORDER BY FIELD(shortname, 'n7', 'd5', 'e6')");
 
             while($row = mysqli_fetch_assoc($kek)) {
                 ?>
@@ -76,7 +85,7 @@
                                 </span>
                             
                         <h4 class="my-3"><?php echo $row["name"] ?></h4>
-                        <a class="btn btn-primary" role="button" href="index.php?information=<?php echo $row["shortname"]; ?>">Mehr Infos</a>
+                        <a class="btn btn-primary" role="button" href="index.php?information=<?php echo $row["shortname"]."#info"; ?>">Mehr Infos</a>
                     </div>
                 <?php
             }

@@ -94,7 +94,6 @@
 		    <div class="row text-center">
 		    <?php
 		    	foreach ($v as $key => $value) {
-		    		echo $value["restriction"] ." ". getRankIDByName(getUserRank());
 		    		if($value["restriction"] > getRankIDByName(getUserRank())) { return; }
 		    		?>
 			        <div class="col-lg-4">
