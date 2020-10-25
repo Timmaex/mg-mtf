@@ -12,10 +12,13 @@
 	    echo "Debug-Fehlermeldung: " . mysqli_connect_error() . PHP_EOL;
 	    exit;
 	}
-
 	function runQuery($sql) {
 		global $db;
-		return mysqli_query($db, $sql);
+		$res = mysqli_query($db, $sql);
+		if(true && !$res) {
+			mysqli_query($db, "INSERT INTO mysql_debug (sql, error) VALUES ('".$sql."', '".mysqli_error()."')");
+		}
+		return $res;
 	}
 
 	function isLoggedIn() {
