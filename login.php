@@ -15,6 +15,7 @@
   }
 
   if (isset($_GET['login'])){
+    echo "login";
     require 'steamauth/openid.php';
     try {
       require 'steamauth/SteamConfig.php';
@@ -66,7 +67,7 @@
               window.location.href="<?=$steamauth['loginpage']?>";<
             </script>
             <noscript>
-              <meta http-equiv="refresh" content="0;url=<?=$steamauth['loginpage']?>" />
+              <meta http-equiv="refresh" content="0;url=index.php" />
             </noscript>
             <?php
             exit;
