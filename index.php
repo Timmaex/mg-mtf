@@ -6,7 +6,6 @@
     require("system/database.php");
     require("system/navbar.php");
 
-
     if(isset($_GET["information"])) {
 
         $info = runQuery("SELECT * FROM mtf_einheiten WHERE shortname='".$_GET["information"]."'");
