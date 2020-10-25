@@ -38,6 +38,16 @@
 	}
 
 	foreach ($DocumentByCategory as $k => $v) {
+		$minRank = 1;
+		foreach ($v as $key => $value) {
+			if($value["restriction"] < $minRank) {
+				$minRank = $value["restriction"];
+			}
+		}
+		if($minRank > getRankIDByName(getUserRank())) {
+			continue;
+		}
+
 		?>
 		<div class="container">
 		    <div class="text-center">
@@ -45,6 +55,7 @@
 		    </div>
 		    <div class="row text-center">
 		    <?php
+
 		    	foreach ($v as $key => $value) {
 		    		if($value["restriction"] > getRankIDByName(getUserRank())) { continue; }
 		    		?>
