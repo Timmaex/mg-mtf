@@ -50,7 +50,10 @@
           $sid32 = toSteamID($sid64);
 
           if(is_null($row["id"])){
-            runQuery("INSERT INTO mtf_user (name, url, steamid64, steamid32, avatarfull, mg_profile) VALUES ('". $steamname ."', '". $profile ."', '". $sid64 ."', '". $sid32 ."', '". $avatar ."', '')");            
+            $kek = runQuery("INSERT INTO mtf_user (name, url, steamid64, steamid32, avatarfull, mg_profile) VALUES ('". $steamname ."', '". $profile ."', '". $sid64 ."', '". $sid32 ."', '". $avatar ."', '')");
+            if(!$kek) {
+              die("You suck");
+            }
           }          
           //userExists($steamprofile['steamid']);
 
