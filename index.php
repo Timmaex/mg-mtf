@@ -189,6 +189,53 @@
     </div>
 </section>
 
+<!-- Unteroffiziere (10) -->
+<section class="page-section bg-light" id="offiziere">
+    <div class="container">
+        <div class="text-center">
+            <h2 class="section-heading text-uppercase">UNTEROFFIZIERE (CSM - SFC)</h2>
+            <h3 class="section-subheading text-muted">Dies sind die aktuellen Unteroffiziere der MTF (CSM - SFC)</h3>
+        </div>
+        <div class="row">
+        <?php
+            $kek = runQuery("SELECT * FROM mtf_character WHERE rank='csm' OR rank='sgm' OR rank='fsg' OR rank='sfc' ORDER BY FIELD(rank, 'csm', 'sgm', 'fsg', 'sfc')");
+
+            while($row = mysqli_fetch_assoc($kek)) {
+                $user = runQuery("SELECT * FROM mtf_user WHERE steamid32='".$row["steamid"]."'");
+                if(mysqli_num_rows($user) == 0) {
+                    $user = array(
+                        "avatarfull" => "assets/img/einheiten/pb_".$row["job"].".png",
+                    );
+                } else {
+                    $user = mysqli_fetch_array($user);
+                }
+
+                ?>
+                <div class="col-lg-4">
+                    <div class="team-member">
+                        <img class="mx-auto rounded-circle"
+                             src="<?php echo $user["avatarfull"]; ?>"
+                             alt=""/>
+                        <h4><?php echo getFullMTFName($row["steamid"]); ?></h4>
+                        <p class="text-muted"><?php echo getRankByShortname($row["rank"]) . " | MTF " . getFullJobname($row["job"]); ?></p>
+                        <?php
+                            if(isset($user["url"])) {
+                                echo '<a class="btn btn-info btn-social mx-2" href="'.$user['url'].'" target="_blank"><i class="fab fa-steam"></i></a>';
+                            } 
+                            if(isset($user["mg_profile"]) && $user["mg_profile"] != "") {
+                                echo '<a class="btn btn-info btn-social mx-2" href="'.$user['mg_profile'].'" target="_blank"><i class="fa fa-globe"></i></a>';
+                            }
+                        ?>
+                    </div>
+                </div>
+                <?php
+            }
+        ?> 
+        </div>
+
+    </div>
+</section>
+
     <?php require("system/footer.php"); ?>
 
 </body>
