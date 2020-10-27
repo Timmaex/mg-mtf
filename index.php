@@ -84,7 +84,7 @@
             $kek = mysqli_fetch_array($kek);
 
             print_r($kek);
-            return;
+            //return;
             //echo json_encode($server_vars);
             if($server_vars[""]["v"] < time()) {
                 // Update variables
