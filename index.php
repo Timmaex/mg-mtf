@@ -81,21 +81,21 @@
             $kek = runQuery("SELECT * FROM `mtf_cache`");
 
 
-            $kek = mysqli_fetch_array($kek);
+           // $kek = mysqli_fetch_array($kek);
 
-            print_r($kek);
+            //print_r($kek);
             //return;
             //echo json_encode($server_vars);
-            if($server_vars[""]["v"] < time()) {
+            //if($server_vars[""]["v"] < time()) {
                 // Update variables
 
-                require_once("server/query/serverdata.php");
+            //    require_once("server/query/serverdata.php");
 
-                runQuery("UPDATE mtf_cache SET v='".strval(time() + 120)."' WHERE k='scpstatus_delay'");
-            }
+            //    runQuery("UPDATE mtf_cache SET v='".strval(time() + 120)."' WHERE k='scpstatus_delay'");
+           // }
 
-            $data = json_decode($server_vars["scpstatus_serverdata"]);
-            $user = json_decode($server_vars["scpstatus_userdata"]);
+            //$data = json_decode($server_vars["scpstatus_serverdata"]);
+            //$user = json_decode($server_vars["scpstatus_userdata"]);
 
 
 
