@@ -1,3 +1,5 @@
+
+
 <!-- test -->
 <!DOCTYPE html>
 <html lang="en">
@@ -61,7 +63,46 @@
 
 ?>
 
+<!-- Server -->
+<section class="page-section" id="services">
+    <div class="container">
+        <div class="text-center">
+            <h2 class="section-heading text-uppercase">SCP-RP by Modern-Gaming</h2>
 
+
+      <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+      <script src="/bootstrap/scripts/jquery.min.js"></script>
+      <script src="/bootstrap/js/bootstrap.min.js"></script>
+            <h3 class="section-subheading text-muted">Hier siehst du aktuelle Infos zum Server. Unter "Mehr Infos" bekommst du genauere Infos.</h3>
+        </div>
+        <div class="row text-center">
+
+        <?php
+            $kek = runQuery("SELECT * FROM `mtf_cache`");
+
+
+            $kek = mysqli_fetch_array($kek);
+
+            print_r($kek);
+            return;
+            //echo json_encode($server_vars);
+            if($server_vars[""]["v"] < time()) {
+                // Update variables
+
+                require_once("server/query/serverdata.php");
+
+                runQuery("UPDATE mtf_cache SET v='".strval(time() + 120)."' WHERE k='scpstatus_delay'");
+            }
+
+            $data = json_decode($server_vars["scpstatus_serverdata"]);
+            $user = json_decode($server_vars["scpstatus_userdata"]);
+
+
+
+        ?> 
+        </div>
+    </div>
+</section>
 <!-- Einheiten -->
 <section class="page-section" id="services">
     <div class="container">

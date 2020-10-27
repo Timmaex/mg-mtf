@@ -65,4 +65,8 @@
 		return $FullJobByJob[$job];
 	}
 
+	// Serverinfo updater
+
+
+
 ?>
