@@ -22,7 +22,7 @@
 	try
 	{
 		$Query->Connect( SQ_SERVER_ADDR, SQ_SERVER_PORT, SQ_TIMEOUT, SQ_ENGINE );
-		
+		echo "trying:\n\n\n\n";
 		$data = $Query->GetPlayers();
 		if(!isset($_GET["type"])) {
 			print_r($data);
