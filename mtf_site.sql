@@ -43,11 +43,11 @@ CREATE TABLE `mtf_character` (
 INSERT INTO `mtf_character` (`id`, `steamid`, `job`, `rank`, `codename`, `dienstnummer`) VALUES
 (1, 'STEAM_0:0:86232373', 'd5', 'col', 'Ackerman', 474),
 (2, 'STEAM_0:1:100929417', 'd5', 'lcol', 'Rho', 563),
-(3, 'STEAM_0:1:169464330\r\n', 'n7', '1lt', 'Triton', 389),
+(3, 'STEAM_0:1:169464330', 'n7', '1lt', 'Triton', 389),
 (4, 'STEAM_0:0:51426971', 'n7', '2lt', 'Linsi', 670),
 (5, 'STEAM_0:1:107932848​', 'd5', 'sgm', 'Sladti', 425),
 (6, 'STEAM_0:0:178850058', 'n7', '2lt', 'Kiwi', 844),
-(7, 'STEAM_0:1:425974519\r\n', 'd5', 'cpt', 'Hidden', 767),
+(7, 'STEAM_0:1:425974519', 'd5', 'cpt', 'Hidden', 767),
 (8, 'STEAM_0:0:195342098', 'n7', '1lt', 'Blackout', 924),
 (9, 'STEAM_0:1:33980265', 'd5', '2lt', 'Tron', 259);
 

@@ -2,7 +2,7 @@
 	require("system/database.php");
 
 	$header = "Personalakte";
-	$subheader = "keko";
+	$subheader = "Hier findest du alle Einträge deiner Akte";
 
 	require("system/navbar.php"); 
 
