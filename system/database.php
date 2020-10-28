@@ -14,8 +14,7 @@
 	}
 	function runQuery($sql) {
 		global $db;
-		$res = mysqli_query($db, $sql);
-		return $res;
+		return mysqli_query($db, $sql);;
 	}
 
 	function isLoggedIn() {
@@ -64,8 +63,6 @@
 		global $FullJobByJob;
 		return $FullJobByJob[$job];
 	}
-
-	// Serverinfo updater
 
 
 

@@ -68,20 +68,44 @@
     <div class="container">
         <div class="text-center">
             <h2 class="section-heading text-uppercase">SCP-RP by Modern-Gaming</h2>
-
-
-      <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-      <script src="/bootstrap/scripts/jquery.min.js"></script>
-      <script src="/bootstrap/js/bootstrap.min.js"></script>
             <h3 class="section-subheading text-muted">Hier siehst du aktuelle Infos zum Server. Unter "Mehr Infos" bekommst du genauere Infos.</h3>
         </div>
         <div class="row text-center">
 
         <?php
-            $kek = runQuery("SELECT * FROM `mtf_cache`");
+            //$kek = runQuery("SELECT * FROM mtf_");
+
+           /* while($row = mysqli_fetch_assoc($kek)) {
+                ?>
+                    <div class="col-md-4">
+                            
+                                <span class="fa-stack fa-8x unitcircle">
+                                    <img src="assets/img/einheiten/<?php echo $row["shortname"]; ?>.jpg"
+                                         alt=""/>
+                                </span>
+                            
+                        <h4 class="my-3"><?php echo $row["name"] ?></h4>
+                        <a class="btn btn-primary" role="button" href="index.php?information=<?php echo $row["shortname"]."#info"; ?>">Mehr Infos</a>
+                    </div>
+                <?php
+            }
 
 
+
+
+*/
+
+
+
+            $kek = runQuery("SELECT * FROM mtf_data");
+
+            echo phpversion();
            // $kek = mysqli_fetch_array($kek);
+           // print_r($kek);
+            $kek = mysqli_fetch_array($kek);
+            print_r($kek);
+
+            echo "<br><br>".json_encode($kek);
 
             //print_r($kek);
             //return;
@@ -99,10 +123,17 @@
 
 
 
+
+
+
+
+
+
         ?> 
         </div>
     </div>
 </section>
+
 <!-- Einheiten -->
 <section class="page-section" id="services">
     <div class="container">
@@ -133,6 +164,7 @@
         </div>
     </div>
 </section>
+
 <!-- Leitung-->
 <section class="page-section bg-dark text-white" id="leitung">
     <div class="container">
