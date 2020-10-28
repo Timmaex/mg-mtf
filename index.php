@@ -1,8 +1,5 @@
-
-
-<!-- test -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 
 <?php 
     require("system/database.php");
@@ -11,9 +8,6 @@
     if(isset($_GET["information"])) {
 
         $info = runQuery("SELECT * FROM mtf_einheiten WHERE shortname='".$_GET["information"]."'");
-
-
-
 
         $info = mysqli_fetch_array($info);
 
@@ -59,12 +53,16 @@
         <?php
         require("system/footer.php"); 
         return;
+    } elseif(isset($_GET["serverinfo"])) {
+
+        require("system/footer.php"); 
+        return;
     }
 
 ?>
 
 <!-- Server -->
-<section class="page-section" id="services">
+<section class="page-section bg-dark text-white" id="server">
     <div class="container">
         <div class="text-center">
             <h2 class="section-heading text-uppercase">SCP-RP by Modern-Gaming</h2>
@@ -97,33 +95,46 @@
 
 
 
-            $kek = runQuery("SELECT * FROM mtf_data");
+            $kek = runQuery("SELECT * FROM mtf_cache WHERE target LIKE 'scpstatus%'");
 
-            echo phpversion();
-           // $kek = mysqli_fetch_array($kek);
-           // print_r($kek);
-            $kek = mysqli_fetch_array($kek);
-            print_r($kek);
+            $server_vars = array();
 
-            echo "<br><br>".json_encode($kek);
+            while($row = mysqli_fetch_assoc($kek)) {
+                $server_vars[$row["target"]] = $row["value"];
+            }
 
-            //print_r($kek);
-            //return;
-            //echo json_encode($server_vars);
-            //if($server_vars[""]["v"] < time()) {
+            $data = json_decode($server_vars["scpstatus_serverdata"], true);
+            $user = json_decode($server_vars["scpstatus_userdata"], true);
+
+            if($server_vars["scpstatus_delay"] < time()) {
                 // Update variables
 
-            //    require_once("server/query/serverdata.php");
+                require_once("server/query/serverdata.php");
 
-            //    runQuery("UPDATE mtf_cache SET v='".strval(time() + 120)."' WHERE k='scpstatus_delay'");
-           // }
+                runQuery("UPDATE mtf_cache SET value='".strval(time() + 120)."' WHERE target='scpstatus_delay'");
+                header("Location: index.php");
+            }
 
-            //$data = json_decode($server_vars["scpstatus_serverdata"]);
-            //$user = json_decode($server_vars["scpstatus_userdata"]);
+            $new_Host = str_replace("u2605", "★", $data["HostName"]);
 
+?>
+          <div class="media position-relative bg-dark text-white col-md-12" style="padding: 5%;">
+            <img src="assets/img/mapico/<?php echo $data["Map"]; ?>.jpg" class="mr-3" width="20%" alt="...">
+            <div class="media-body">
+              <h5 class="section-heading text-uppercase"><?php echo $new_Host; ?></h5>
+              <h6 class=""><?php echo strval($data["Players"])."/".strval($data["MaxPlayers"]); ?> Spieler</h6>
+              <h6 class="">Karte: <?php echo $data["Map"]; ?></h6>
+              <h6 class="">Aktualisiert in: <?php echo seconds_format(abs(time() - intval($server_vars["scpstatus_delay"]))); ?></h6>
+              <p></p>
+              <br>
+              <br>
+              <br>
+              <a class="btn btn-primary sticky-bottom" role="button" href="steam://connect/scprp.modern-gaming.net:27015">Server beitreten</a>    
+              <a class="btn btn-primary align-self-end" role="button" href="index.php?serverinfo=true">Mehr Informationen</a>
 
-
-
+            </div>
+          </div>
+<?php
 
 
 
@@ -262,16 +273,16 @@
     </div>
 </section>
 
-<!-- Unteroffiziere (10) -->
+<!-- Unteroffiziere (9) -->
 <section class="page-section bg-light" id="offiziere">
     <div class="container">
         <div class="text-center">
-            <h2 class="section-heading text-uppercase">UNTEROFFIZIERE (CSM - SFC)</h2>
-            <h3 class="section-subheading text-muted">Dies sind die aktuellen Unteroffiziere der MTF (CSM - SFC)</h3>
+            <h2 class="section-heading text-uppercase">UNTEROFFIZIERE</h2>
+            <h3 class="section-subheading text-muted">Dies sind die aktuellen Unteroffiziere der MTF</h3>
         </div>
         <div class="row">
         <?php
-            $kek = runQuery("SELECT * FROM mtf_character WHERE rank='csm' OR rank='sgm' OR rank='fsg' OR rank='sfc' ORDER BY FIELD(rank, 'csm', 'sgm', 'fsg', 'sfc')");
+            $kek = runQuery("SELECT * FROM mtf_character WHERE rank='csm' OR rank='sgm' OR rank='fsg' OR rank='sfc' OR rank='ssgt' OR rank='sgt' ORDER BY FIELD(rank, 'csm', 'sgm', 'fsg', 'sfc', 'ssgt', 'sgt') LIMIT 10");
 
             while($row = mysqli_fetch_assoc($kek)) {
                 $user = runQuery("SELECT * FROM mtf_user WHERE steamid32='".$row["steamid"]."'");

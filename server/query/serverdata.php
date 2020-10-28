@@ -28,16 +28,14 @@
 			return;
 		}
 		require_once("system/database.php");
-        $server_vars = runQuery("SELECT * FROM mtf_cache WHERE k='scpstatus_delay'");
+        $server_vars = runQuery("SELECT * FROM mtf_cache WHERE target='scpstatus_delay'");
         $server_vars = mysqli_fetch_array($server_vars);
-        //print_r($server_vars);
-        //echo json_encode($server_vars);
 
-        if($server_vars["v"] < time()) {
+        if($server_vars["value"] < time()) {
             // Update variables
 
-            runQuery("UPDATE mtf_cache SET v='".$server_info."' WHERE k='scpstatus_serverdata'");
-            runQuery("UPDATE mtf_cache SET v='".$user_info."' WHERE k='scpstatus_userdata'");
+            runQuery("UPDATE mtf_cache SET value='".$server_info."' WHERE target='scpstatus_serverdata'");
+            runQuery("UPDATE mtf_cache SET value='".$user_info."' WHERE target='scpstatus_userdata'");
         }
 
 
