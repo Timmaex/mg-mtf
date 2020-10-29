@@ -61,92 +61,8 @@
 
 ?>
 
-<!-- Servers -->
-<section class="page-section bg-dark text-white" id="server">
-    <div class="container">
-        <div class="text-center">
-            <h2 class="section-heading text-uppercase">SCP-RP by Modern-Gaming</h2>
-            <h3 class="section-subheading text-muted">Hier siehst du aktuelle Infos zum Server. Unter "Mehr Infos" bekommst du genauere Infos.</h3>
-        </div>
-        <div class="row text-center">
-
-        <?php
-            //$kek = runQuery("SELECT * FROM mtf_");
-
-           /* while($row = mysqli_fetch_assoc($kek)) {
-                ?>
-                    <div class="col-md-4">
-                            
-                                <span class="fa-stack fa-8x unitcircle">
-                                    <img src="assets/img/einheiten/<?php echo $row["shortname"]; ?>.jpg"
-                                         alt=""/>
-                                </span>
-                            
-                        <h4 class="my-3"><?php echo $row["name"] ?></h4>
-                        <a class="btn btn-primary" role="button" href="index.php?information=<?php echo $row["shortname"]."#info"; ?>">Mehr Infos</a>
-                    </div>
-                <?php
-            }
-
-
-
-
-*/
-
-
-
-            $kek = runQuery("SELECT * FROM mtf_cache WHERE target LIKE 'scpstatus%'");
-
-            $server_vars = array();
-
-            while($row = mysqli_fetch_assoc($kek)) {
-                $server_vars[$row["target"]] = $row["value"];
-            }
-
-            $data = json_decode($server_vars["scpstatus_serverdata"], true);
-            $user = json_decode($server_vars["scpstatus_userdata"], true);
-
-            if($server_vars["scpstatus_delay"] < time()) {
-                // Update variables
-
-                require_once("server/query/serverdata.php");
-
-                runQuery("UPDATE mtf_cache SET value='".strval(time() + 120)."' WHERE target='scpstatus_delay'");
-                header("Location: index.php");
-            }
-
-            $new_Host = str_replace("u2605", "★", $data["HostName"]);
-
-?>
-          <div class="media position-relative bg-dark text-white col-md-12" style="padding: 5%;">
-            <img src="assets/img/mapico/<?php echo $data["Map"]; ?>.jpg" class="mr-3" width="20%" alt="...">
-            <div class="media-body">
-              <h5 class="section-heading text-uppercase"><?php echo $new_Host; ?></h5>
-              <h6 class=""><?php echo strval($data["Players"])."/".strval($data["MaxPlayers"]); ?> Spieler</h6>
-              <h6 class="">Karte: <?php echo $data["Map"]; ?></h6>
-              <h6 class="">Aktualisiert in: <?php echo seconds_format(abs(time() - intval($server_vars["scpstatus_delay"]))); ?></h6>
-              <p></p>
-              <br>
-              <br>
-              <br>
-              <a class="btn btn-primary sticky-bottom" role="button" href="steam://connect/scprp.modern-gaming.net:27015">Server beitreten</a>    
-              <a class="btn btn-primary align-self-end" role="button" href="index.php?serverinfo=true">Mehr Informationen</a>
-
-            </div>
-          </div>
-<?php
-
-
-
-
-
-        ?> 
-        </div>
-    </div>
-</section>
-
 <!-- Einheiten -->
-<section class="page-section" id="services">
+<section class="page-section bg-light" id="services">
     <div class="container">
         <div class="text-center">
             <h2 class="section-heading text-uppercase">Die MTF Einheiten</h2>
@@ -162,7 +78,7 @@
                     <div class="col-md-4">
                             
                                 <span class="fa-stack fa-8x unitcircle">
-                                    <img src="assets/img/einheiten/<?php echo $row["shortname"]; ?>.jpg"
+                                    <img src="assets/img/einheiten/<?php echo $row["shortname"]; ?>.png"
                                          alt=""/>
                                 </span>
                             
@@ -209,10 +125,10 @@
                         
                         <?php
                             if(isset($user["url"])) {
-                                echo '<a class="btn btn-info btn-social mx-2" href="'.$user['url'].'" target="_blank"><i class="fab fa-steam"></i></a>';
+                                echo '<a class="btn btn-primary btn-social mx-2" href="'.$user['url'].'" target="_blank"><i class="fab fa-steam"></i></a>';
                             }
                             if(isset($user["mg_profile"]) && $user["mg_profile"] != "") {
-                                echo '<a class="btn btn-info btn-social mx-2" href="'.$user['mg_profile'].'" target="_blank"><i class="fa fa-globe"></i></a>';
+                                echo '<a class="btn btn-primary btn-social mx-2" href="'.$user['mg_profile'].'" target="_blank"><i class="fa fa-globe"></i></a>';
                             }
                         ?>
                     </div>
@@ -257,10 +173,10 @@
                         <p class="text-muted"><?php echo getRankByShortname($row["rank"]) . " | MTF " . getFullJobname($row["job"]); ?></p>
                         <?php
                             if(isset($user["url"])) {
-                                echo '<a class="btn btn-info btn-social mx-2" href="'.$user['url'].'" target="_blank"><i class="fab fa-steam"></i></a>';
+                                echo '<a class="btn btn-primary btn-social mx-2" href="'.$user['url'].'" target="_blank"><i class="fab fa-steam"></i></a>';
                             } 
                             if(isset($user["mg_profile"]) && $user["mg_profile"] != "") {
-                                echo '<a class="btn btn-info btn-social mx-2" href="'.$user['mg_profile'].'" target="_blank"><i class="fa fa-globe"></i></a>';
+                                echo '<a class="btn btn-primary btn-social mx-2" href="'.$user['mg_profile'].'" target="_blank"><i class="fa fa-globe"></i></a>';
                             }
                         ?>
                     </div>
@@ -304,10 +220,10 @@
                         <p class="text-muted"><?php echo getRankByShortname($row["rank"]) . " | MTF " . getFullJobname($row["job"]); ?></p>
                         <?php
                             if(isset($user["url"])) {
-                                echo '<a class="btn btn-info btn-social mx-2" href="'.$user['url'].'" target="_blank"><i class="fab fa-steam"></i></a>';
+                                echo '<a class="btn btn-primary btn-social mx-2" href="'.$user['url'].'" target="_blank"><i class="fab fa-steam"></i></a>';
                             } 
                             if(isset($user["mg_profile"]) && $user["mg_profile"] != "") {
-                                echo '<a class="btn btn-info btn-social mx-2" href="'.$user['mg_profile'].'" target="_blank"><i class="fa fa-globe"></i></a>';
+                                echo '<a class="btn btn-primary btn-social mx-2" href="'.$user['mg_profile'].'" target="_blank"><i class="fa fa-globe"></i></a>';
                             }
                         ?>
                     </div>
