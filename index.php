@@ -61,7 +61,7 @@
 
 ?>
 
-<!-- Server -->
+<!-- Servers -->
 <section class="page-section bg-dark text-white" id="server">
     <div class="container">
         <div class="text-center">
