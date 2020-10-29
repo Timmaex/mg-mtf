@@ -1,16 +1,19 @@
 <?php
 
-$db = mysqli_connect("84.59.133.60", "mtf", "mImdfhoxdGM2mdpD", "mtf_site");
+$db = mysqli_connect("90.186.173.187", "mtf", "mImdfhoxdGM2mdpD", "mtf_site");
 
  
 if(isset($_REQUEST["term"])){
     // Prepare a select statement
-    $sql = "SELECT * FROM mtf_character WHERE codename LIKE ? OR dienstnummer LIKE ?";
+    $sql = "SELECT * FROM mtf_character WHERE codename LIKE ? OR dienstnummer LIKE ? OR steamid LIKE ?";
     
     if($stmt = mysqli_prepare($db, $sql)){
         // Bind variables to the prepared statement as parameters
-        mysqli_stmt_bind_param($stmt, "ss", $param_term, $param_term);
-        
+        //if($param_term == "s" or $param_term == "S") {
+        //    mysqli_stmt_bind_param($stmt, "sss", $param_term, $param_term, $param_term);
+        //} else {
+            mysqli_stmt_bind_param($stmt, "sss", $param_term, $param_term, $param_term);
+        //}
         // Set parameters
         $param_term = $_REQUEST["term"] . '%';
         

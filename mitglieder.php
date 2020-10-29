@@ -64,7 +64,7 @@
 <section class="page-section" id="services">
     <div class="container">
         <div class="row text-center">
-            <div class="col-md-12 ">
+            <div class="col-md-12">
                 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
                 <script type="text/javascript">
                 $(document).ready(function(){
@@ -90,8 +90,8 @@
                 });
                 </script>
 
-                <div class="search-box">
-                    <input type="text" class="form-control" autocomplete="off" placeholder="Nach Name oder Dienstnummer suchen" />
+                <div class="search-box" style="width: 50%;">
+                    <input type="text" class="form-control" autocomplete="off" placeholder="Nach Name, Dienstnummer oder SteamID32 suchen" />
                     <div class="result"></div>
                 </div>
             </div>

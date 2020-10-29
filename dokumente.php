@@ -38,7 +38,7 @@
 	}
 
 	foreach ($DocumentByCategory as $k => $v) {
-		$minRank = 1;
+		$minRank = 13;
 		foreach ($v as $key => $value) {
 			if($value["restriction"] < $minRank) {
 				$minRank = $value["restriction"];
