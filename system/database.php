@@ -68,4 +68,26 @@
 	  $t = round($seconds);
 	  return sprintf('%02d:%02d:%02d', ($t/3600),($t/60%60), $t%60);
 	}
+
+	function minRankRequired($rank, $refuse) {
+		$curRank = getUserRank();
+		if(getRankIDByName($rank) > getRankIDByName($curRank)) {
+			header("Location: ".$refuse);
+		}
+	}
+
+	function hasRank($rank) {
+		$curRank =  getRankIDByName(getUserRank());
+		$rank =  getRankIDByName($rank);
+		if($rank > $curRank) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	function isAdmin() {		//						 Kiwi									       Tron
+		return isLoggedIn() && ($_SESSION["steamid"] == "76561198317965844" or $_SESSION["steamid"] == "76561198028226259") or false;
+	}
+
 ?>

@@ -86,4 +86,13 @@
     }
   }
 
+/*
+[LCPL] E6 641 "Lebs": x
+[CPL] E6 462 "Lopez": x
+[PFC] E6 554 "Ruby": x
+[CPL] E6 745 "Duval": x
+
+
+Winter 837 - beschützt liber SD während Angriff
+*/
 ?>

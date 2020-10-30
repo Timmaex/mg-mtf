@@ -20,7 +20,7 @@ function toCommunityID($id) {
     } elseif (is_numeric($id) && strlen($id) < 16) {
         return bcadd($id, '76561197960265728');
     } else {
-        return $id; // We have no idea what this is, so just return it.
+        return false; // We have no idea what this is, so just return it.
     }
 }
 /* Don't have BC math?  Here's an example for ya' with bit-shifting instead
@@ -44,7 +44,7 @@ function toSteamID($id) {
     } elseif (is_numeric($id)) {
         $z = bcdiv($id, '2'); // Actually new User ID format
     } else {
-        return $id; // We have no idea what this is, so just return it.
+        return false; // We have no idea what this is, so just return it.
     }
     $y = bcmod($id, '2');
     return 'STEAM_0:' . $y . ':' . floor($z);

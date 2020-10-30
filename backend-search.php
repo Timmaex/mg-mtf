@@ -5,16 +5,23 @@ $db = mysqli_connect("90.186.173.187", "mtf", "mImdfhoxdGM2mdpD", "mtf_site");
  
 if(isset($_REQUEST["term"])){
     // Prepare a select statement
-    $sql = "SELECT * FROM mtf_character WHERE codename LIKE ? OR dienstnummer LIKE ? OR steamid LIKE ?";
+    $sql = "SELECT * FROM mtf_character WHERE codename LIKE ? OR dienstnummer LIKE ?";
     
+    $req = $_REQUEST["term"];
+
+    if(substr($req, 0, 6) == "STEAM_") {
+        $sql = "SELECT * FROM mtf_character WHERE codename LIKE ? OR dienstnummer LIKE ? OR steamid LIKE ?";
+    }
+
     if($stmt = mysqli_prepare($db, $sql)){
-        // Bind variables to the prepared statement as parameters
-        //if($param_term == "s" or $param_term == "S") {
-        //    mysqli_stmt_bind_param($stmt, "sss", $param_term, $param_term, $param_term);
-        //} else {
+
+        if(substr($req, 0, 6) == "STEAM_") {
             mysqli_stmt_bind_param($stmt, "sss", $param_term, $param_term, $param_term);
-        //}
-        // Set parameters
+        } else {
+            mysqli_stmt_bind_param($stmt, "ss", $param_term, $param_term);
+        }
+            
+
         $param_term = $_REQUEST["term"] . '%';
         
         // Attempt to execute the prepared statement
@@ -25,10 +32,12 @@ if(isset($_REQUEST["term"])){
             if(mysqli_num_rows($result) > 0){
                 // Fetch result rows as an associative array
                 while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
-                    echo "<p><a href='index.php'>" . ucfirst($row["job"])." ".$row["dienstnummer"]." ".$row["codename"] . "</a></p>";
+                   // <a href='index.php'>" . ucfirst($row["job"])." ".$row["dienstnummer"]." ".$row["codename"] . "</a>
+                    //echo "<div style='padding: 5px; padding-left: 20px; padding-right: 20px;'><button> </button></div>";
+                    echo "<button class='search btn-primary' style='padding: 5px; padding-left: 20px; padding-right: 20px;'>sss </button>";
                 }
             } else{
-                echo "<p>No matches found</p>";
+                echo "<p>Kein Treffer...</p>";
             }
         } else{
             echo "ERROR: Could not able to execute $sql. " . mysqli_error($db);
