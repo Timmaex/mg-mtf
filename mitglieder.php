@@ -304,15 +304,50 @@
 
 
 
-<section class="page-section" id="services">
+<section class="page-section" id="search">
+<?php
+
+    if(isset($_GET["searchtext"])) {
+
+        $query = $_GET["searchtext"];
+        $query_exp = explode(" ", $query);
+        $error = false;
+
+        if(count($query_exp) != 3) {
+            errorBox("Nichts gefunden! :(", "Deine Suche ergab leider keinen Treffer. Du kannst nach Codename, Dienstnummer oder SteamDI32 suchen.", "mitglieder.php");
+            $error = true;
+        }
+
+        if($error != true) {
+            $job = $query_exp[0];
+            $dnummer = $query_exp[1];
+            $name = $query_exp[2];
+
+            $res = runQuery("SELECT * FROM mtf_character WHERE job='$job' AND codename='$name' AND dienstnummer='$dnummer'");
+
+            if(mysqli_num_rows($res) == 0 ) {
+                $error = true;
+                errorBox("Nichts gefunden! :(", "Deine Suche ergab leider keinen Treffer. Du kannst nach Codename, Dienstnummer oder SteamDI32 suchen.");
+            }
+        }
+
+    }
+?>
+<br>
+
+
     <?php
         if(hasRank("cpl")) {
             echo '<a href="mitglieder.php?adduser" style="margin-right: 50px;" class="btn btn-primary active float-right" role="button" aria-pressed="true">Benutzer    hinzufügen</a>';
         }
     ?>
     <div class="container">
+        <div class="text-center">
+            <h2 class="section-heading text-uppercase">Suchen</h2>
+            <h3 class="section-subheading text-muted">Hier kannst du nach anderen MTF-Soldaten suchen.</h3>
+        </div>
         <div class="row text-center">
-            <div class="col-md-12">
+            <div class="col-md-10" style="width: 50%; margin-left: 18%;">
                 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
                 <script type="text/javascript">
                 $(document).ready(function(){
@@ -347,9 +382,7 @@
                           </div>
                         </div> 
                         <input id="searchtext" name="searchtext" type="text" class="form-control cool-search" autocomplete="off" placeholder="Nach Name, Dienstnummer oder SteamID32 suchen"> 
-                        <div style="width: auto;" class="result bg-dark text-white">
-                            <input type='hidden' name='steamid' value='fghfghfg' />
-                        </div>                        
+                        <div style="width: 76%;" class="result bg-dark text-white" ></div>                        
                         <div class="input-group-append search-box">
                           <button name="" type="submit" class="btn btn-primary input-group-text">Suchen</button>
                         </div>
@@ -361,23 +394,144 @@
             </div>
         </div>
     </div>
+    <?php
+        if(isset($error) && $error != true) {
+            while($row = mysqli_fetch_assoc($res)) {
+                $user = runQuery("SELECT * FROM mtf_user WHERE steamid32='".$row["steamid"]."'");
+                $isAvailable = true;
+                if(mysqli_num_rows($user) == 0) {
+                    $user = array(
+                        "avatarfull" => "assets/img/einheiten/pb_".$row["job"].".png",
+                        "mg_profile" => "",
+                        "url" => ""
+                    );
+                    $isAvailable = false;
+                }
+
+                    if($isAvailable) {
+                        $user = mysqli_fetch_array($user);
+                    }
+                    ?>
+                    <br>
+                    <div class="container">
+                      <div class="content border border-primary rounded" style=" height: auto; padding: 25px;">
+                        <center>
+                          <div class="media position-relative">
+                            <img width="184px" height="184px" src="<?php echo $user["avatarfull"]; ?>" class="mr-3" alt="">
+                            <div class="media-body">
+                              <div class="text-center">
+                                <h2 class="section-heading"><?php echo getFullMTFName($row["steamid"]); ?></h2>
+                                  <h3 class="section-subheading text-muted"><?php echo getRankByShortname($row["rank"]); ?></h3>
+                              </div>
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                              <?php
+                              if($user["url"] != "") {
+                              ?>
+                                <a type="button" role="button" target="_blank" href="<?php echo $user["url"] ?>" class="btn btn-secondary"><i class="fab fa-steam"></i>  Steamprofil</a>
+                              <?php
+                              }
+                              ?>
+                              <a type="button" role="button" href="akte.php?user=<?php echo $row["steamid"] ?>" class="btn btn-primary"><i class="fa fa-id-card"></i>  Zur Akte</a>
+                              <?php
+                              if($user["mg_profile"] != "") {
+                                echo '<a type="button" target="_blank" href="'.$user["mg_profile"].'" class="btn btn-info"><i class="fa fa-sitemap"></i>  MG-Forum</a>';
+                              }
+                              ?>
+                            </div>
+                            </div>
+                          </div>
+                      </div>
+                    </div>
+
+
+                    <?php
+            }
+        }
+    ?>
 </section>
 
-<?php
-    if(isset($_GET["searchtext"])) {
-        $query = $_GET["searchtext"];
-        $query_exp = explode(" ", $query);
-        $job = $query_exp[0];
-        $dnummer = $query_exp[1];
-        $name = $query_exp[2];
+<!-- 10 highest members -->
+<section class="page-section bg-light" id="services">
+    <div class="container">
+        <div class="text-center">
+            <h2 class="section-heading text-uppercase">Soldaten der Einheiten</h2>
+            <h3 class="section-subheading text-muted">Hier stehen jeweils die MTFler aus den einzelnen Einheiten</h3>
+        </div>
+        <div class="row text-center">
 
-        $res = runQuery("SELECT * FROM mtf_character WHERE job='$job' AND codename='$name' AND dienstnummer='$dnummer'");
-        $res = mysqli_fetch_array($res);
-        print_r($res);
-    }
-?>
-<div class="clearfix">
-    <!--<img src="assets/img/einheiten/n7.png" alt="..." class="pull-left mr-2">-->
-    <p>Work in Progress!</p>
-</div>
+        <?php
+            $kek = runQuery("SELECT * FROM mtf_einheiten ORDER BY FIELD(shortname, 'n7', 'd5', 'e6')");
+
+            while($row = mysqli_fetch_assoc($kek)) {
+                ?>
+                    <div class="col-md-4">
+                            
+                                <span class="fa-stack fa-8x unitcircle">
+                                    <img src="assets/img/einheiten/<?php echo $row["shortname"]; ?>.png"
+                                         alt=""/>
+                                </span>
+                            
+                        <h4 class="my-3"><?php echo $row["name"] ?></h4>
+                        <?php
+                            $uff = runQuery("SELECT * FROM mtf_character WHERE job='".$row["shortname"]."' ORDER BY FIELD(rank, 'col', 'lcol', 'maj', 'cpt', '1lt', '2lt', 'csm', 'sgm', 'fsg', 'sfc', 'ssgt', 'sgt', 'cpl', 'lcpl', 'spc', 'pfc', 'pvt', 'r') LIMIT 10");
+
+                            while($row = mysqli_fetch_assoc($uff)) {
+                                $user = runQuery("SELECT * FROM mtf_user WHERE steamid32='".$row["steamid"]."'");
+                                $isAvailable = true;
+                                if(mysqli_num_rows($user) == 0) {
+                                    $user = array(
+                                        "avatarfull" => "assets/img/einheiten/pb_".$row["job"].".png",
+                                        "mg_profile" => "",
+                                    );
+                                    $isAvailable = false;
+                                }
+
+                                if($isAvailable) {
+                                    $user = mysqli_fetch_array($user);
+                                }
+                                    ?>
+                                        <div class="">
+                            <img width="96px" height="96px" src="<?php echo $user["avatarfull"]; ?>" class="mr-3" alt="">
+                            <div class="media-body">
+                              <div class="text-center">
+                                <h3 class="section-heading"><?php echo getFullMTFName($row["steamid"]); ?></h3>
+                                <h3 class="section-subheading text-muted"><?php echo getRankByShortname($row["rank"]); ?></h3>
+
+                                <?php
+                                    if(isset($user["url"])) {
+                                        echo '<a class="btn btn-primary btn-social mx-2" href="'.$user['url'].'" target="_blank"><i class="fab fa-steam"></i></a>';
+                                    }
+                                    if(isset($user["mg_profile"]) && $user["mg_profile"] != "") {
+                                        echo '<a class="btn btn-primary btn-social mx-2" href="'.$user['mg_profile'].'" target="_blank"><i class="fa fa-sitemap"></i></a>';
+                                    }
+                                    echo '<a class="btn btn-primary btn-social mx-2" href=akte.php?user="'.$row['steamid'].'"><i class="fa fa-id-card"></i></a>';
+                                ?>
+
+
+
+                              </div>
+
+
+
+                            </div>
+                                        </div>
+                                        <br>
+                                    <?php
+                                
+                            }
+
+
+                        ?>
+
+
+
+                    </div>
+                <?php
+
+            }
+        ?> 
+        </div>
+    </div>
+</section>
+
 <?php require("system/footer.php"); ?>

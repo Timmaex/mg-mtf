@@ -24,7 +24,7 @@
                                 <div class="col-md-4">
                                         <a href="index.php?information=<?php echo $row["shortname"]; ?>">
                                             <span class="fa-stack fa-8x unitcircle">
-                                                <img src="assets/img/einheiten/<?php echo $row["shortname"]; ?>.jpg"
+                                                <img src="assets/img/einheiten/<?php echo $row["shortname"]; ?>.png"
                                                      alt=""/>
                                             </span>
                                         </a>

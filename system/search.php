@@ -5,12 +5,12 @@ $db = mysqli_connect("90.186.173.187", "mtf", "mImdfhoxdGM2mdpD", "mtf_site");
  
 if(isset($_REQUEST["term"])){
     // Prepare a select statement
-    $sql = "SELECT * FROM mtf_character WHERE codename LIKE ? OR dienstnummer LIKE ?";
+    $sql = "SELECT * FROM mtf_character WHERE codename LIKE ? OR dienstnummer LIKE ? LIMIT 5";
     
     $req = $_REQUEST["term"];
 
     if(substr($req, 0, 6) == "STEAM_") {
-        $sql = "SELECT * FROM mtf_character WHERE codename LIKE ? OR dienstnummer LIKE ? OR steamid LIKE ?";
+        $sql = "SELECT * FROM mtf_character WHERE codename LIKE ? OR dienstnummer LIKE ? OR steamid LIKE ? LIMIT 5";
     }
 
     if($stmt = mysqli_prepare($db, $sql)){

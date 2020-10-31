@@ -90,4 +90,14 @@
 		return isLoggedIn() && ($_SESSION["steamid"] == "76561198317965844" or $_SESSION["steamid"] == "76561198028226259") or false;
 	}
 
+	function errorBox($title, $text) {
+		?>
+        <br>
+        <div style="width: 50%; margin-left: 25%;" class="alert alert-danger col-12" role="alert">
+          <h4 class="alert-heading"><?php echo $title; ?></h4>
+          <p><?php echo $text; ?></p>
+        </div>		
+        <?php
+	}
+
 ?>
