@@ -473,7 +473,7 @@
                             
                         <h4 class="my-3"><?php echo $row["name"] ?></h4>
                         <?php
-                            $uff = runQuery("SELECT * FROM mtf_character WHERE job='".$row["shortname"]."' ORDER BY FIELD(rank, 'col', 'lcol', 'maj', 'cpt', '1lt', '2lt', 'csm', 'sgm', 'fsg', 'sfc', 'ssgt', 'sgt', 'cpl', 'lcpl', 'spc', 'pfc', 'pvt', 'r') LIMIT 10");
+                            $uff = runQuery("SELECT * FROM mtf_character WHERE job='".$row["shortname"]."' ORDER BY FIELD(rank, 'col', 'lcol', 'maj', 'cpt', '1lt', '2lt', 'csm', 'sgm', 'fsg', 'sfc', 'ssgt', 'sgt', 'cpl', 'lcpl', 'spc', 'pfc', 'pvt', 'r') LIMIT 12");
 
                             while($row = mysqli_fetch_assoc($uff)) {
                                 $user = runQuery("SELECT * FROM mtf_user WHERE steamid32='".$row["steamid"]."'");
@@ -504,7 +504,7 @@
                                     if(isset($user["mg_profile"]) && $user["mg_profile"] != "") {
                                         echo '<a class="btn btn-primary btn-social mx-2" href="'.$user['mg_profile'].'" target="_blank"><i class="fa fa-sitemap"></i></a>';
                                     }
-                                    echo '<a class="btn btn-primary btn-social mx-2" href=akte.php?user="'.$row['steamid'].'"><i class="fa fa-id-card"></i></a>';
+                                    echo '<a class="btn btn-primary btn-social mx-2" href="akte.php?user='.$row['steamid'].'"><i class="fa fa-id-card"></i></a>';
                                 ?>
 
 

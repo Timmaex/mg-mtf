@@ -12,27 +12,51 @@
 
 	<?php
 		if(isLoggedIn() == true) {
-            $kek = runQuery("SELECT * FROM mtf_character WHERE steamid='".getSteamID32()."'");
+
+			if(!isset($_GET["user"])) {
+				header("Location: akte.php?user=".getSteamID32());
+			}
+
+            $kek = runQuery("SELECT * FROM mtf_character WHERE steamid='".$_GET["user"]."'");
 
             while($row = mysqli_fetch_assoc($kek)) {
 
+                $user = runQuery("SELECT * FROM mtf_user WHERE steamid32='".$row["steamid"]."'");
+                if(mysqli_num_rows($user) == 0) {
+                    $user = array(
+                        "avatarfull" => "assets/img/einheiten/pb_".$row["job"].".png",
+                        "mg_profile" => "",
+                        "url" => "",
+                    );
+                } else {
+                    $user = mysqli_fetch_array($user);
+                }
+
 
                 ?>
+
+
+
                 <div class="col-lg-12">
                     <div class="team-member">
                         <img class="mx-auto rounded-circle"
                              src="<?php echo $user["avatarfull"]; ?>"
                              alt=""/>
                         <h4><?php echo getFullMTFName($row["steamid"]); ?></h4>
-                        <p class="text-muted"><?php echo $rankByShort[$row["rank"]]; ?></p>
-                        <a class="btn btn-dark btn-social mx-2" href="<?php echo $user['url']; ?>" target="_blank"><i class="fab fa-steam"></i></a>
+                        <p class="text-muted"><?php echo getRankByShortname($row["rank"]) . " | MTF " . getFullJobname($row["job"]); ?></p>
+                        
                         <?php
-                            if(isset($user["mg_profile"]) && $user["mg_profile"] != "") {
-                                echo '<a class="btn btn-dark btn-social mx-2" href="'.$user['mg_profile'].'" target="_blank"><i class="fa fa-globe"></i></a>';
+                            if($user["url"] != "") {
+                                echo '<a class="btn btn-primary btn-social mx-2" href="'.$user['url'].'" target="_blank"><i class="fab fa-steam"></i></a>';
+                            }
+                            if($user["mg_profile"] != "") {
+                                echo '<a class="btn btn-primary btn-social mx-2" href="'.$user['mg_profile'].'" target="_blank"><i class="fa fa-globe"></i></a>';
                             }
                         ?>
                     </div>
                 </div>
+
+
                 <?php
             }
        
