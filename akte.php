@@ -43,15 +43,6 @@
 
 			   <div class="container">
 			        <div class="text-center">
-
-
-
-
-
-
-
-
-
 						<div class="container">
 			                <br><br><br>
                         	<div class="row">
@@ -86,14 +77,6 @@
                         		</div>
                         	</div>
 						</div>
-
-
-
-
-
-
-
-
 			        </div>
 			    </div>
 

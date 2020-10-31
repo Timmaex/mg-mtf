@@ -32,7 +32,60 @@
 ?>
 <?php
     if(isset($_GET["adduser"])) {
-        minRankRequired("cpl", "mitglieder.php");
+        if(!isset($_GET["anmelden"])) {
+            minRankRequired("cpl", "mitglieder.php?adduser&anmelden");
+        }
+
+        if(isset($_GET["anmelden"])) {
+?>
+               <div class="container">
+                    <div class="text-center">
+                        <div class="container">
+                            <br><br><br>
+                            <div class="row">
+                                <div style="border-color: red;" class="col-md-12 col-md-offset-4 col-sm-6 col-sm-offset-3">
+                                    <div class="panel panel-danger" style="border: 2px solid red;">
+                                        <div class="panel-heading text-white" style="background-color: red; padding: 5px;">
+                                            <i class="fa fa-sign-in "></i> Bitte Anmelden
+                                        </div>
+                                    
+                                        <div class="panel-body text-center">
+                                            <h4 style="margin-top:0;" class="page-header"><br>Du musst angemeldet sein, um diese Seite zu sehen</h4>
+                                                <hr> </hr>
+                                            Du kannst hier folglich neue Benutzer eintargen und Ausbildungen abschließen.
+                                            <br>
+                                            <br>
+
+                                                <?php
+                                                    $button = array();
+
+                                                    $buttonstyle = "square";
+                                                    $button['rectangle'] = "01";
+                                                    $button['square'] = "02";
+                                                    $button = "<a href='login.php?login=true'><img src='https://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_".$button[$buttonstyle].".png'></a>";
+                                                    
+                                                    echo $button;
+                                                ?>
+                                            <br>
+                                            <br>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <br>
+                <br>
+                <br>
+<?php
+            if(!isLoggedIn()) {
+                require("system/footer.php");
+                return;
+            }
+        }
 
         if(isset($_GET["success"])) {
             ?>
@@ -52,6 +105,10 @@
                   <p><?php echo $_GET["errormessage"]; ?></p>
                 </div>
             <?php
+            if(!isLoggedIn()) {
+                require("system/footer.php");
+                return;
+            }
         }
 
         if(isset($_GET["submit"])) {
@@ -248,19 +305,23 @@
 
 
 <section class="page-section" id="services">
+    <?php
+        if(hasRank("cpl")) {
+            echo '<a href="mitglieder.php?adduser" style="margin-right: 50px;" class="btn btn-primary active float-right" role="button" aria-pressed="true">Benutzer    hinzufügen</a>';
+        }
+    ?>
     <div class="container">
         <div class="row text-center">
             <div class="col-md-12">
                 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
                 <script type="text/javascript">
                 $(document).ready(function(){
-                    $('.search-box input[type="text"]').on("keyup input", function(){
-                        /* Get input value on change */
+                    $('.cool-search').on("keyup input", function(){
+
                         var inputVal = $(this).val();
                         var resultDropdown = $(this).siblings(".result");
                         if(inputVal.length){
                             $.get("backend-search.php", {term: inputVal}).done(function(data){
-                                // Display the returned data in browser
                                 resultDropdown.html(data);
                             });
                         } else{
@@ -269,32 +330,54 @@
                     });
                     
                     // Set search input value on click of result item
-                    $(document).on("click", ".result .search", function(){
-                        $(this).parents(".search-box").find('input[type="text"]').val($(this).text());
-                        $(this).parent(".result").empty();
+                    $(document).on("click", ".mtf-data", function(){
+                        $('.cool-search').val($(this).text());
+                         $('.result').empty();
                     });
                 });
                 </script>
-                <style>
-                    p:hover {
-                        
-                    }
-                </style>
-                <div class="search-box" style="width: 50%;">
-                    <input type="text" class="form-control" autocomplete="off" placeholder="Nach Name, Dienstnummer oder SteamID32 suchen" />
-                    <div style="width: auto;" class="result bg-dark text-white"></div>
-                </div>
+
+                <form>
+                  <div class="form-group row">
+                    <div class="col-12">
+                      <div class="input-group">
+                        <div class="input-group-prepend daddy-search">
+                          <div class="input-group-text">
+                            <i class="fa fa-search"></i>
+                          </div>
+                        </div> 
+                        <input id="searchtext" name="searchtext" type="text" class="form-control cool-search" autocomplete="off" placeholder="Nach Name, Dienstnummer oder SteamID32 suchen"> 
+                        <div style="width: auto;" class="result bg-dark text-white">
+                            <input type='hidden' name='steamid' value='fghfghfg' />
+                        </div>                        
+                        <div class="input-group-append search-box">
+                          <button name="" type="submit" class="btn btn-primary input-group-text">Suchen</button>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div> 
+                </form>
             </div>
         </div>
     </div>
 </section>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
+
+<?php
+    if(isset($_GET["searchtext"])) {
+        $query = $_GET["searchtext"];
+        $query_exp = explode(" ", $query);
+        $job = $query_exp[0];
+        $dnummer = $query_exp[1];
+        $name = $query_exp[2];
+
+        $res = runQuery("SELECT * FROM mtf_character WHERE job='$job' AND codename='$name' AND dienstnummer='$dnummer'");
+        $res = mysqli_fetch_array($res);
+        print_r($res);
+    }
+?>
+<div class="clearfix">
+    <!--<img src="assets/img/einheiten/n7.png" alt="..." class="pull-left mr-2">-->
+    <p>Work in Progress!</p>
+</div>
 <?php require("system/footer.php"); ?>

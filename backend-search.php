@@ -34,7 +34,7 @@ if(isset($_REQUEST["term"])){
                 while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
                    // <a href='index.php'>" . ucfirst($row["job"])." ".$row["dienstnummer"]." ".$row["codename"] . "</a>
                     //echo "<div style='padding: 5px; padding-left: 20px; padding-right: 20px;'><button> </button></div>";
-                    echo "<button class='search btn-primary' style='padding: 5px; padding-left: 20px; padding-right: 20px;'>sss </button>";
+                    echo "<button class='search btn-primary mtf-data' style='padding: 5px; padding-left: 20px; padding-right: 20px;'>".ucfirst($row["job"])." ".$row["dienstnummer"]." ".$row["codename"]."</button>";
                 }
             } else{
                 echo "<p>Kein Treffer...</p>";
