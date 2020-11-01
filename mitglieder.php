@@ -394,7 +394,7 @@
                       <div class="content border border-primary rounded" style=" height: auto; padding: 25px;">
                         <center>
                           <div class="media position-relative">
-                            <img width="184px" height="184px" src="<?php echo $user["avatarfull"]; ?>" class="mr-3" alt="">
+                            <img width="184px" height="184px" src="<?php echo $user["avatarfull"]; ?>" class="rounded border border-primary" alt="">
                             <div class="media-body">
                               <div class="text-center">
                                 <h2 class="section-heading"><?php echo getFullMTFName($row["steamid"]); ?></h2>
