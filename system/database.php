@@ -14,7 +14,11 @@
 	}
 	function runQuery($sql) {
 		global $db;
-		return mysqli_query($db, $sql);;
+		$res = mysqli_query($db, $sql);
+		if(!$res) {
+			echo mysqli_error($db);
+		}
+		return $res;
 	}
 
 	function isLoggedIn() {

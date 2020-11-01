@@ -30,6 +30,11 @@
 					minRankRequired("maj", "akte.php?user=".$_GET["user"]);
 				}
 
+				if(isset($_GET["delete"])) {
+					runQuery("DELETE FROM mtf_entries WHERE id='".$_GET["delete"]."'");
+					header("Location: akte.php?user=".$_GET["user"]."&hidden");
+				}
+
 				if(isset($_GET["comment"])) {
 					$steamid = $_GET["user"];
 					$test = runQuery("SELECT * FROM mtf_character WHERE steamid='".$steamid."'");
@@ -92,12 +97,13 @@
 					$offz = runQuery("SELECT * FROM mtf_user WHERE steamid32='".$entry["offz_steamid"]."'");
 
 					if(mysqli_num_rows($offz) == 0) {
-						echo "false";
 						$offz = array(
-							"avatarfull" => "assets/img/einheiten/pb_n7.png",
+							"avatarfull" => "assets/img/einheiten/pb_e6.png",
 						);
+					} else {
+						$offz = mysqli_fetch_array($offz);
 					}
-					$offz = mysqli_fetch_array($offz);
+					
 					$offz_akte = runQuery("SELECT * FROM mtf_character WHERE steamid='".$entry["offz_steamid"]."'");
 					$isAvailable = true;
 					if(mysqli_num_rows($offz_akte) == 0) {
@@ -118,7 +124,8 @@
 					        	    </div>
 					        	    <div class="col-md-10">
 					        	        <p>
-					        	            <a class="float-left" href="akte.php?user=<?php echo $entry["offz_steamid"]; ?>"><strong><?php if($isAvailable == false) {echo "f"; } else { echo getFullMTFName($offz_akte["steamid"]); } ?></strong></a>
+					        	            <a class="float-left" href="akte.php?user=<?php echo $entry["offz_steamid"]; ?>"><strong><?php if($isAvailable == false) {echo $entry["offz_name"]." (Nicht mehr im Dienst)"; } else { echo getFullMTFName($offz_akte["steamid"]); } ?></strong></a>
+					        	            <a class="float-right text-danger" href="akte.php?user=<?php echo $entry["steamid"]; ?>&hidden&delete=<?php echo $entry["id"]; ?>"><strong>Löschen</strong></a>
 					        	       </p>
 					        	       <div class="clearfix"></div>
 					        	        <p><?php echo $entry["text"]; ?></p>
@@ -206,8 +213,10 @@
 	        if($curRank > getRankIDByName($aktenRank) OR isAdmin()) {
 	            echo '<a href="akte.php?user='.$_GET["user"].'&demote"  class="btn btn-danger" role="button" aria-pressed="true"><i class="fa fa-minus-square"></i>  Degradieren</a>';
 	        }
+	        $hiddenentry = runQuery("SELECT * FROM mtf_entries WHERE steamid='".$_GET["user"]."' AND hidden='true'");
+	        $hiddenentry = mysqli_num_rows($hiddenentry);
 	        if(hasRank("maj") OR isAdmin()) {
-	            echo '<a href="akte.php?user='.$_GET["user"].'&hidden"  class="btn btn-secondary" role="button" aria-pressed="true"><i class="fa fa-align-justify"></i>  Geheimakte einsehen</a>';
+	            echo '<a href="akte.php?user='.$_GET["user"].'&hidden"  class="btn btn-secondary" role="button" aria-pressed="true"><i class="fa fa-align-justify"></i>  Geheimakte einsehen  <span class="badge badge-light">'.strval($hiddenentry).'</span></a>';
 	        }
 
 	        ?>
