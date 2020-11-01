@@ -74,5 +74,27 @@
         "d5" => "Delta-5",
         "e6" => "Epsilon-6"
     );
+    
+    $canPromoteTo = array(
+        "r" => "r",
+        "pvt" => "r",
+        "pfc" => "r",
+        "spc" => "r",
+        "lcpl" => "r",
+        "cpl" => "pfc",
 
+        "sgt" => "cpl",
+        "ssgt" => "cpl",
+        "sfc" => "cpl",
+        "fsg" => "cpl",
+        "sgm" => "fsg",
+        "csm" => "sgm",
+
+        "2lt" => "csm",
+        "1lt" => "csm",
+        "cpt" => "2lt",
+        "maj" => "cpt",
+        "lcol" => "maj",
+        "col" => "lcol"
+    );
 ?>

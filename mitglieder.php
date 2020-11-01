@@ -6,29 +6,6 @@
 
 	require("system/navbar.php"); 
 
-    $canPromoteTo = array(
-        "r" => "r",
-        "pvt" => "r",
-        "pfc" => "r",
-        "spc" => "r",
-        "lcpl" => "r",
-        "cpl" => "pfc",
-
-        "sgt" => "cpl",
-        "ssgt" => "cpl",
-        "sfc" => "cpl",
-        "fsg" => "cpl",
-        "sgm" => "fsg",
-        "csm" => "sgm",
-
-        "2lt" => "csm",
-        "1lt" => "csm",
-        "cpt" => "2lt",
-        "maj" => "cpt",
-        "lcol" => "maj",
-        "col" => "lcol"
-    );
-
 ?>
 <?php
     if(isset($_GET["adduser"])) {

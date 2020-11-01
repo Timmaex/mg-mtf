@@ -19,8 +19,10 @@
 
             $kek = runQuery("SELECT * FROM mtf_character WHERE steamid='".$_GET["user"]."'");
 
-            while($row = mysqli_fetch_assoc($kek)) {
+            $kekw = array();
 
+            while($row = mysqli_fetch_assoc($kek)) {
+            	$kekw = $row;
                 $user = runQuery("SELECT * FROM mtf_user WHERE steamid32='".$row["steamid"]."'");
                 if(mysqli_num_rows($user) == 0) {
                     $user = array(
@@ -68,18 +70,20 @@
             <div class="text-center">
             <div class="btn-group float-middle" role="group">
             <?php
-	        if(true) {
+            $curRank = getRankIDByName(getUserRank());
+            $aktenRank = $kekw["rank"];
+	        if(($curRank > getRankIDByName($aktenRank) OR isAdmin()) && !isOffizier($aktenRank)) {
 	            echo '<a href="akte.php?user='.$_GET["user"].'&positive"  class="btn btn-success" role="button" aria-pressed="true"><i class="fa fa-thumbs-up"></i>  Positiv aufgefallen</a>';
 	            echo '<a href="akte.php?user='.$_GET["user"].'&negative"  class="btn btn-danger" role="button" aria-pressed="true"><i class="fa fa-thumbs-down"></i>  Negativ aufgefallen</a>';
 	        }
-	        if(true) {
+	        if(getRankIDByName($aktenRank) <= getRankIDByName($canPromoteTo[getUserRank()]) OR isAdmin() AND $aktenRank != "col") {
 	            echo '<a href="akte.php?user='.$_GET["user"].'&promote"  class="btn btn-primary" role="button" aria-pressed="true"><i class="fa fa-plus-square"></i>  Befördern</a>';
 	        }
-	        if(true) {
-	            echo '<a href="akte.php?user='.$_GET["user"].'&promote"  class="btn btn-danger" role="button" aria-pressed="true"><i class="fa fa-minus-square"></i>  Degradieren</a>';
+	        if($curRank > getRankIDByName($aktenRank) OR isAdmin()) {
+	            echo '<a href="akte.php?user='.$_GET["user"].'&demote"  class="btn btn-danger" role="button" aria-pressed="true"><i class="fa fa-minus-square"></i>  Degradieren</a>';
 	        }
 	        if(hasRank("maj") OR isAdmin()) {
-	            echo '<a href="akte.php?user='.$_GET["user"].'&positive"  class="btn btn-secondary" role="button" aria-pressed="true"><i class="fa fa-align-justify"></i>  Geheimakte einsehen</a>';
+	            echo '<a href="akte.php?user='.$_GET["user"].'&hidden"  class="btn btn-secondary" role="button" aria-pressed="true"><i class="fa fa-align-justify"></i>  Geheimakte einsehen</a>';
 	        }
 
 	        ?>
