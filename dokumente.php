@@ -57,7 +57,7 @@
 		    <?php
 
 		    	foreach ($v as $key => $value) {
-		    		if($value["restriction"] > getRankIDByName(getUserRank())) { continue; }
+		    		if($value["restriction"] > getRankIDByName(getUserRank()) AND !isAdmin()) { continue; }
 		    		?>
 			        <div class="col-lg-4">
 			            <h4 class="my-3 text-black"><?php echo $value["header"] ?></h4>

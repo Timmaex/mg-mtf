@@ -423,7 +423,7 @@
                                 <h2 class="section-heading"><?php echo getFullMTFName($row["steamid"]); ?></h2>
                                   <h3 class="section-subheading text-muted"><?php echo getRankByShortname($row["rank"]); ?></h3>
                               </div>
-                            <div class="btn-group" role="group" aria-label="Basic example">
+                            <div class="btn-group" role="group">
                               <?php
                               if($user["url"] != "") {
                               ?>

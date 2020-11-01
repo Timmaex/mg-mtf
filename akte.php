@@ -11,7 +11,7 @@
 <section class="page-section bg-light" id="akte">
 
 	<?php
-		if(isLoggedIn() == true) {
+		if(isLoggedIn() == true or isset($_GET["user"])) {
 
 			if(!isset($_GET["user"])) {
 				header("Location: akte.php?user=".getSteamID32());
@@ -34,31 +34,58 @@
 
 
                 ?>
-
-
-
-                <div class="col-lg-12">
-                    <div class="team-member">
-                        <img class="mx-auto rounded-circle"
-                             src="<?php echo $user["avatarfull"]; ?>"
-                             alt=""/>
-                        <h4><?php echo getFullMTFName($row["steamid"]); ?></h4>
-                        <p class="text-muted"><?php echo getRankByShortname($row["rank"]) . " | MTF " . getFullJobname($row["job"]); ?></p>
-                        
-                        <?php
-                            if($user["url"] != "") {
-                                echo '<a class="btn btn-primary btn-social mx-2" href="'.$user['url'].'" target="_blank"><i class="fab fa-steam"></i></a>';
-                            }
-                            if($user["mg_profile"] != "") {
-                                echo '<a class="btn btn-primary btn-social mx-2" href="'.$user['mg_profile'].'" target="_blank"><i class="fa fa-globe"></i></a>';
-                            }
-                        ?>
+                    <div class="container">
+                      <div class="content border border-primary rounded" style=" height: auto; padding: 25px;">
+                        <center>
+                          <div class="media position-relative">
+                            <img width="184px" height="184px" src="<?php echo $user["avatarfull"]; ?>" class="mr-3" alt="">
+                            <div class="media-body" style="height: 184px;">
+                              <div class="text-center" style="height: 184px;">
+                                <h2 class="section-heading"><?php echo getFullMTFName($row["steamid"]); ?></h2>
+                                <h3 class="section-subheading text-muted"><?php echo getRankByShortname($row["rank"]); ?></h3>
+                                <h4 class="">Mitglied der MTF <?php echo getFullJobName($row["job"]); ?></h4>
+                              </div>
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                              <?php
+                              if($user["url"] != "") {
+                              ?>
+                                <a type="button" role="button" target="_blank" href="<?php echo $user["url"] ?>" class="btn btn-secondary"><i class="fab fa-steam"></i>  Steamprofil</a>
+                              <?php
+                              }
+                              if($user["mg_profile"] != "") {
+                                echo '<a type="button" target="_blank" href="'.$user["mg_profile"].'" class="btn btn-info"><i class="fa fa-sitemap"></i>  MG-Forum</a>';
+                              }
+                              ?>
+                            </div>
+                            </div>
+                          </div>
+                      </div>
                     </div>
-                </div>
-
-
                 <?php
             }
+            ?>
+            <br>
+            <div class="text-center">
+            <div class="btn-group float-middle" role="group">
+            <?php
+	        if(true) {
+	            echo '<a href="akte.php?user='.$_GET["user"].'&positive"  class="btn btn-success" role="button" aria-pressed="true"><i class="fa fa-thumbs-up"></i>  Positiv aufgefallen</a>';
+	            echo '<a href="akte.php?user='.$_GET["user"].'&negative"  class="btn btn-danger" role="button" aria-pressed="true"><i class="fa fa-thumbs-down"></i>  Negativ aufgefallen</a>';
+	        }
+	        if(true) {
+	            echo '<a href="akte.php?user='.$_GET["user"].'&promote"  class="btn btn-primary" role="button" aria-pressed="true"><i class="fa fa-plus-square"></i>  Befördern</a>';
+	        }
+	        if(true) {
+	            echo '<a href="akte.php?user='.$_GET["user"].'&promote"  class="btn btn-danger" role="button" aria-pressed="true"><i class="fa fa-minus-square"></i>  Degradieren</a>';
+	        }
+	        if(hasRank("maj") OR isAdmin()) {
+	            echo '<a href="akte.php?user='.$_GET["user"].'&positive"  class="btn btn-secondary" role="button" aria-pressed="true"><i class="fa fa-align-justify"></i>  Geheimakte einsehen</a>';
+	        }
+
+	        ?>
+	    	</div>
+	    </div>
+	        <?php      
        
 		} else {
 			// nicht eingeloggt der homo
