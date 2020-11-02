@@ -46,11 +46,24 @@
 					$name = getFullMTFName($offz_steamid);
 					$time = strval(time());
 					$text = $_GET["comment"];
-					runQuery("INSERT INTO mtf_entries (steamid, offz_steamid, offz_name, time, text, hidden) VALUES ('".$steamid."', '".$offz_steamid."', '".$name."', '".$time."', '".$text."', 'true')");
-					header("Location: akte.php?user=".$steamid."&hidden");
+					$canDo = true;
+					if($text == "") {
+						errorBox("Falsche Angaben!", "Deine Nachicht darf nicht leer sein!");
+						$canDo = false;
+					}
+
+					if($canDo) {
+						runQuery("INSERT INTO mtf_entries (steamid, offz_steamid, offz_name, time, text, type) VALUES ('".$steamid."', '".$offz_steamid."', '".$name."', '".$time."', '".$text."', 'hidden')");
+						header("Location: akte.php?user=".$steamid."&hidden");
+					}
 				}
 
 				?>
+					<div class="text-center">
+						<h2>Akte von <?php echo getFullMTFName($_GET["user"]); ?></h2>
+						<a class="btn btn-primary" href="akte.php?user=<?php echo $_GET["user"]; ?>"><i class="fa fa-arrow-left mr-2"></i>Zurück</a>
+						<br><br>
+					</div>
 	                <form style="margin-left: 25%;">
 	                  <input type='hidden' name='user' value='<?php echo $_GET["user"]; ?>' />
 	                  <input type='hidden' name='hidden' value='true' />
@@ -74,7 +87,7 @@
 	                </form>
 				<?php
 
-				$res = runQuery("SELECT * FROM mtf_entries WHERE steamid='".$_GET["user"]."' AND hidden='true' ORDER BY id DESC");
+				$res = runQuery("SELECT * FROM mtf_entries WHERE steamid='".$_GET["user"]."' AND type='hidden' ORDER BY id DESC");
 
 				if(mysqli_num_rows($res) == 0) {
 					?>
@@ -205,15 +218,15 @@
             $aktenRank = $kekw["rank"];
 	        if(($curRank > getRankIDByName($aktenRank) OR isAdmin()) && !isOffizier($aktenRank)) {
 	            echo '<a href="akte.php?user='.$_GET["user"].'&positive"  class="btn btn-success" role="button" aria-pressed="true"><i class="fa fa-thumbs-up"></i>  Positiv aufgefallen</a>';
-	            echo '<a href="akte.php?user='.$_GET["user"].'&negative"  class="btn btn-danger" role="button" aria-pressed="true"><i class="fa fa-thumbs-down"></i>  Negativ aufgefallen</a>';
 	        }
 	        if(getRankIDByName($aktenRank) <= getRankIDByName($canPromoteTo[getUserRank()]) OR isAdmin() AND $aktenRank != "col") {
 	            echo '<a href="akte.php?user='.$_GET["user"].'&promote"  class="btn btn-primary" role="button" aria-pressed="true"><i class="fa fa-plus-square"></i>  Befördern</a>';
+	            echo '<a href="akte.php?user='.$_GET["user"].'&negative"  class="btn btn-danger" role="button" aria-pressed="true"><i class="fa fa-thumbs-down"></i>  Negativ aufgefallen</a>';
 	        }
 	        if($curRank > getRankIDByName($aktenRank) OR isAdmin()) {
 	            echo '<a href="akte.php?user='.$_GET["user"].'&demote"  class="btn btn-danger" role="button" aria-pressed="true"><i class="fa fa-minus-square"></i>  Degradieren</a>';
 	        }
-	        $hiddenentry = runQuery("SELECT * FROM mtf_entries WHERE steamid='".$_GET["user"]."' AND hidden='true'");
+	        $hiddenentry = runQuery("SELECT * FROM mtf_entries WHERE steamid='".$_GET["user"]."' AND type='hidden'");
 	        $hiddenentry = mysqli_num_rows($hiddenentry);
 	        if(hasRank("maj") OR isAdmin()) {
 	            echo '<a href="akte.php?user='.$_GET["user"].'&hidden"  class="btn btn-secondary" role="button" aria-pressed="true"><i class="fa fa-align-justify"></i>  Geheimakte einsehen  <span class="badge badge-light">'.strval($hiddenentry).'</span></a>';

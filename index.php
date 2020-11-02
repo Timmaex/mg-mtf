@@ -130,6 +130,7 @@
                             if(isset($user["mg_profile"]) && $user["mg_profile"] != "") {
                                 echo '<a class="btn btn-primary btn-social mx-2" href="'.$user['mg_profile'].'" target="_blank"><i class="fa fa-globe"></i></a>';
                             }
+                            echo '<a class="btn btn-primary btn-social mx-2" href="akte.php?user='.$row['steamid'].'"><i class="fa fa-id-card"></i></a>';
                         ?>
                     </div>
                 </div>
@@ -178,6 +179,7 @@
                             if(isset($user["mg_profile"]) && $user["mg_profile"] != "") {
                                 echo '<a class="btn btn-primary btn-social mx-2" href="'.$user['mg_profile'].'" target="_blank"><i class="fa fa-globe"></i></a>';
                             }
+                            echo '<a class="btn btn-primary btn-social mx-2" href="akte.php?user='.$row['steamid'].'"><i class="fa fa-id-card"></i></a>';
                         ?>
                     </div>
                 </div>
@@ -225,6 +227,7 @@
                             if(isset($user["mg_profile"]) && $user["mg_profile"] != "") {
                                 echo '<a class="btn btn-primary btn-social mx-2" href="'.$user['mg_profile'].'" target="_blank"><i class="fa fa-globe"></i></a>';
                             }
+                            echo '<a class="btn btn-primary btn-social mx-2" href="akte.php?user='.$row['steamid'].'"><i class="fa fa-id-card"></i></a>';
                         ?>
                     </div>
                 </div>
