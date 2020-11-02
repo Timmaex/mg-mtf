@@ -24,17 +24,75 @@
 				die();
 			}
 
+			if(isset($_GET["positive"])) {
+				$rank = getUserRankBySteamID($_GET["user"]);
+				if(getRankIDByName($rank) < getRankIDByName(getUserRank())) {
 
+					if(isset($_GET["comment"])) {
+						$offz_steamid = getSteamID32();
+						$name = getFullMTFName($offz_steamid);
+						$time = strval(time());
+						$text = $_GET["comment"];
+						$canDo = true;
+						if($text == "") {
+							errorBox("Falsche Angaben!", "Deine Nachicht darf nicht leer sein!");
+							$canDo = false;
+						}
+
+						if($canDo) {
+							runQuery("INSERT INTO mtf_entries (steamid, offz_steamid, offz_name, time, text, type) VALUES ('".$steamid."', '".$offz_steamid."', '".$name."', '".$time."', '".$text."', 'positive')");
+							header("Location: akte.php?user=".$steamid."");
+						}						
+					}
+
+					?>
+						<div class="text-center">
+							<h2><?php echo getFullMTFName($_GET["user"]); ?> ist also positiv aufgeafeeln, hm?</h2>
+							<a class="btn btn-primary" href="akte.php?user=<?php echo $_GET["user"]; ?>"><i class="fa fa-arrow-left mr-2"></i>Nein, doch nicht...</a>
+							<br><br>
+						</div>
+		                <form style="margin-left: 25%;">
+		                  <input type='hidden' name='user' value='<?php echo $_GET["user"]; ?>' />
+		                  <input type='hidden' name='positive' value='true' />
+		                  <div class="form-group row">
+		                    <div class="col-8">
+		                      <div class="input-group">
+		                        <div class="input-group-prepend">
+		                          <div class="input-group-text">
+		                            <i class="fa fa-comment mr-2"></i>Grund
+		                          </div>
+		                        </div> 
+		                        <input id="comment" name="comment" type="text" class="form-control" autocomplete="off" placeholder="Wieso ist <?php echo htmlspecialchars(getFullMTFName($_GET["user"])); ?> positiv aufgefallen?"> 
+		                        <div style="width: 76%;" class="result bg-dark text-white"></div>                        
+		                        <div class="input-group-append">
+		                          <button name="" type="submit" class="btn btn-primary input-group-text">Absenden</button>
+		                        </div>
+
+		                      </div>
+		                    </div>
+		                  </div> 
+		                </form>
+					<?php
+
+					echo "</section>";
+					require("system/footer.php");
+					die();					
+				}
+			}
+
+			// Hidden entried
 			if(isset($_GET["hidden"])) {
 				if(!isAdmin()) {
 					minRankRequired("maj", "akte.php?user=".$_GET["user"]);
 				}
 
+				// Delete one
 				if(isset($_GET["delete"])) {
 					runQuery("DELETE FROM mtf_entries WHERE id='".$_GET["delete"]."'");
 					header("Location: akte.php?user=".$_GET["user"]."&hidden");
 				}
 
+				// Submit
 				if(isset($_GET["comment"])) {
 					$steamid = $_GET["user"];
 					$test = runQuery("SELECT * FROM mtf_character WHERE steamid='".$steamid."'");

@@ -48,6 +48,13 @@
 		return $data["rank"];
 	}
 
+	function getUserRankBySteamID($sid) {
+		$data = runQuery("SELECT rank FROM mtf_character WHERE steamid='".$sid."'");
+		if(mysqli_num_rows($data) == 0) { return "r"; }
+		$data = mysqli_fetch_array($data);
+		return $data["rank"];
+	}
+
 	function getRankByShortname($short) {
 		global $rankByShort;
 		return $rankByShort[$short];
