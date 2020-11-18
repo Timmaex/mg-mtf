@@ -4,7 +4,7 @@
 
 	session_start();
 
-	$db = mysqli_connect("90.186.173.187", "mtf", "mImdfhoxdGM2mdpD", "mtf_site");
+	$db = mysqli_connect("90.186.198.210", "mtf", "mImdfhoxdGM2mdpD", "mtf_site");
 
 	if (!$db) {
 	    echo "Fehler: konnte nicht mit MySQL verbinden." . PHP_EOL;

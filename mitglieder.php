@@ -380,7 +380,8 @@
                     $user = array(
                         "avatarfull" => "assets/img/einheiten/pb_".$row["job"].".png",
                         "mg_profile" => "",
-                        "url" => ""
+                        "url" => "",
+                        "name" => ""
                     );
                     $isAvailable = false;
                 }
@@ -397,8 +398,8 @@
                             <img width="184px" height="184px" src="<?php echo $user["avatarfull"]; ?>" class="rounded border border-primary" alt="">
                             <div class="media-body">
                               <div class="text-center">
-                                <h2 class="section-heading"><?php echo getFullMTFName($row["steamid"]); ?></h2>
-                                  <h3 class="section-subheading text-muted"><?php echo getRankByShortname($row["rank"]); ?></h3>
+                                <h2 class="section-heading"><?php echo getFullMTFName($row["steamid"]); if($name != "") { echo " | ".$user["name"]; } ?></h2>
+                                <h3 class="section-subheading text-muted"><?php echo getRankByShortname($row["rank"]); ?></h3>
                               </div>
                             <div class="btn-group" role="group">
                               <?php
@@ -512,3 +513,39 @@
 </section>
 
 <?php require("system/footer.php"); ?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <?php
+                        $curRank = getUserRank();
+                        $can = $canPromoteTo[$curRank];
+                        $curRank = getRankIDByName(getUserRankBySteamID($_GET["user"]));
+                        if($can != "r") {
+                            $canID = getRankIDByName($can);
+                            if(isAdmin()) {
+                                $canID = 18;
+                            }
+
+                            for($i = $curRank + 1; $i <= $canID; $i++) {
+                                echo '<option value="'.getRankByID($i).'">'.getRankByShortname(getRankByID($i)).'</option>';
+                            }
+                        }
+
+                    ?>

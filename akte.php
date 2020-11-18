@@ -24,6 +24,186 @@
 				die();
 			}
 
+			// DEMOTE
+			if(isset($_GET["demote"])) {
+				$rank = getUserRankBySteamID($_GET["user"]);
+				if(getRankIDByName($rank) < getRankIDByName(getUserRank()) or isAdmin()) {
+
+					if(isset($_GET["text"])) {+
+						$offz_steamid = getSteamID32();
+						$name = getFullMTFName($offz_steamid);
+						$time = strval(time());
+						$text = $_GET["text"];
+						$newRank = $_GET["rank"];
+
+						$canDo = true;
+						if($text == "" OR $newRank == "") {
+							errorBox("Falsche Angaben!", "Deine Nachicht darf nicht leer sein!");
+							$canDo = false;
+						}
+
+						if(getRankIDByName($canPromoteTo[getUserRank()]) >= getRankIDByName(getUserRankBySteamID($_GET["user"])) or isAdmin()) {
+							if($canDo) {
+								runQuery("INSERT INTO mtf_entries (steamid, offz_steamid, offz_name, time, text, type, value) VALUES ('".$steamid."', '".$offz_steamid."', '".$name."', '".$time."', '".$text."', 'promote', '".$newRank."')");
+								header("Location: akte.php?user=".$_GET["user"]."");
+								runQuery("UPDATE mtf_character SET rank='".$newRank."' WHERE steamid='".$_GET["user"]."'");
+							}
+						} else {
+							errorBox("Falsche Angaben!", "Du kannst nicht höher als bis zum ".$canPromoteTo[getUserRank()]." befördern!");
+						}
+						
+					}
+
+					?>
+						<div class="text-center">
+							<h2><?php echo getFullMTFName($_GET["user"]); ?> befördern</h2>
+							<a class="btn btn-primary" href="akte.php?user=<?php echo $_GET["user"]; ?>"><i class="fa fa-arrow-left mr-2"></i>Zurück</a>
+							<br><br>
+						</div>
+
+						<form style="margin-right: 25%;">
+						  <input type='hidden' name='user' value='<?php echo $_GET["user"]; ?>' />
+						  <input type='hidden' name='promote' value='true' />
+						  <div class="form-group row">
+						    <label for="" class="col-4 col-form-label"></label> 
+						    <div class="col-8">
+						      <select id="" name="rank" class="custom-select" aria-describedby="HelpBlock">
+			                    <?php
+			                        $curRank = getUserRank();
+			                        $can = $canPromoteTo[$curRank];
+			                        $curRank = getRankIDByName(getUserRankBySteamID($_GET["user"]));
+			                        if($can != "r") {
+			                            $canID = getRankIDByName($can);
+			                            if(isAdmin()) {
+			                                $canID = 18;
+			                            }
+
+			                            for($i = $curRank + 1; $i <= $canID; $i++) {
+			                                echo '<option value="'.getRankByID($i).'">'.getRankByShortname(getRankByID($i)).'</option>';
+			                            }
+			                        }
+
+			                    ?>
+						      </select> 
+						      <span id="HelpBlock" class="form-text text-muted">Wähle den Rang, auf den du <?php echo getFullMTFName($_GET["user"]); ?> befördern möchtest.</span>
+						    </div>
+						  </div>
+						  <div class="form-group row">
+						    <label for="text" class="col-4 col-form-label"></label> 
+						    <div class="col-8">
+						      <div class="input-group">
+						        <div class="input-group-prepend">
+						          <div class="input-group-text">
+						            <i class="fa fa-comment mr-2"></i>Grund
+						          </div>
+						        </div> 
+						        <input id="text" name="text" type="text" class="form-control" required="required" > 
+						        <div class="input-group-append">
+						          <button name="" type="submit" class="btn btn-primary input-group-text">Absenden</button>
+						        </div>
+						      </div>
+						    </div>
+						  </div> 
+
+						</form>
+					<?php
+
+					echo "</section>";
+					require("system/footer.php");
+					die();					
+				}
+			}
+
+			// PROMOTE
+			if(isset($_GET["promote"])) {
+				$rank = getUserRankBySteamID($_GET["user"]);
+				if(getRankIDByName($rank) < getRankIDByName(getUserRank()) or isAdmin()) {
+
+					if(isset($_GET["text"])) {+
+						$offz_steamid = getSteamID32();
+						$name = getFullMTFName($offz_steamid);
+						$time = strval(time());
+						$text = $_GET["text"];
+						$newRank = $_GET["rank"];
+
+						$canDo = true;
+						if($text == "" OR $newRank == "") {
+							errorBox("Falsche Angaben!", "Deine Nachicht darf nicht leer sein!");
+							$canDo = false;
+						}
+
+						if(getRankIDByName($canPromoteTo[getUserRank()]) >= getRankIDByName(getUserRankBySteamID($_GET["user"])) or isAdmin()) {
+							if($canDo) {
+								runQuery("INSERT INTO mtf_entries (steamid, offz_steamid, offz_name, time, text, type, value) VALUES ('".$steamid."', '".$offz_steamid."', '".$name."', '".$time."', '".$text."', 'promote', '".$newRank."')");
+								header("Location: akte.php?user=".$_GET["user"]."");
+								runQuery("UPDATE mtf_character SET rank='".$newRank."' WHERE steamid='".$_GET["user"]."'");
+							}
+						} else {
+							errorBox("Falsche Angaben!", "Du kannst nicht höher als bis zum ".$canPromoteTo[getUserRank()]." befördern!");
+						}
+						
+					}
+
+					?>
+						<div class="text-center">
+							<h2><?php echo getFullMTFName($_GET["user"]); ?> befördern</h2>
+							<a class="btn btn-primary" href="akte.php?user=<?php echo $_GET["user"]; ?>"><i class="fa fa-arrow-left mr-2"></i>Zurück</a>
+							<br><br>
+						</div>
+
+						<form style="margin-right: 25%;">
+						  <input type='hidden' name='user' value='<?php echo $_GET["user"]; ?>' />
+						  <input type='hidden' name='promote' value='true' />
+						  <div class="form-group row">
+						    <label for="" class="col-4 col-form-label"></label> 
+						    <div class="col-8">
+						      <select id="" name="rank" class="custom-select" aria-describedby="HelpBlock">
+			                    <?php
+			                        $curRank = getUserRank();
+			                        $can = $canPromoteTo[$curRank];
+			                        $curRank = getRankIDByName(getUserRankBySteamID($_GET["user"]));
+			                        if($can != "r") {
+			                            $canID = getRankIDByName($can);
+			                            if(isAdmin()) {
+			                                $canID = 18;
+			                            }
+
+			                            for($i = $curRank + 1; $i <= $canID; $i++) {
+			                                echo '<option value="'.getRankByID($i).'">'.getRankByShortname(getRankByID($i)).'</option>';
+			                            }
+			                        }
+
+			                    ?>
+						      </select> 
+						      <span id="HelpBlock" class="form-text text-muted">Wähle den Rang, auf den du <?php echo getFullMTFName($_GET["user"]); ?> befördern möchtest.</span>
+						    </div>
+						  </div>
+						  <div class="form-group row">
+						    <label for="text" class="col-4 col-form-label"></label> 
+						    <div class="col-8">
+						      <div class="input-group">
+						        <div class="input-group-prepend">
+						          <div class="input-group-text">
+						            <i class="fa fa-comment mr-2"></i>Grund
+						          </div>
+						        </div> 
+						        <input id="text" name="text" type="text" class="form-control" required="required" > 
+						        <div class="input-group-append">
+						          <button name="" type="submit" class="btn btn-primary input-group-text">Absenden</button>
+						        </div>
+						      </div>
+						    </div>
+						  </div> 
+
+						</form>
+					<?php
+
+					echo "</section>";
+					require("system/footer.php");
+					die();					
+				}
+			}
+
 			// Negative entry
 			if(isset($_GET["negative"])) {
 				$rank = getUserRankBySteamID($_GET["user"]);
@@ -332,15 +512,23 @@
             <?php
             $curRank = getRankIDByName(getUserRank());
             $aktenRank = $kekw["rank"];
-	        if(($curRank > getRankIDByName($aktenRank) OR isAdmin()) && !isOffizier($aktenRank)) {
-	            echo '<a href="akte.php?user='.$_GET["user"].'&positive"  class="btn btn-success" role="button" aria-pressed="true"><i class="fa fa-thumbs-up"></i>  Positiv aufgefallen</a>';
+	        $positives = runQuery("SELECT * FROM mtf_entries WHERE steamid='".$_GET["user"]."' AND type='positive'");
+	        $positives = mysqli_num_rows($positives);
+	        if(($curRank > getRankIDByName($aktenRank) OR isAdmin())) {
+	            echo '<a href="akte.php?user='.$_GET["user"].'&positive"  class="btn btn-success" role="button" aria-pressed="true"><i class="fa fa-thumbs-up"></i>  Positiv aufgefallen  <span class="badge badge-light">'.strval($positives).'</span></a>';
 	        }
+	        $promotes = runQuery("SELECT * FROM mtf_entries WHERE steamid='".$_GET["user"]."' AND type='promote'");
+	        $promotes = mysqli_num_rows($promotes);
+	        $negatives = runQuery("SELECT * FROM mtf_entries WHERE steamid='".$_GET["user"]."' AND type='negative'");
+	        $negatives = mysqli_num_rows($negatives);
 	        if(getRankIDByName($aktenRank) <= getRankIDByName($canPromoteTo[getUserRank()]) OR isAdmin() AND $aktenRank != "col") {
-	            echo '<a href="akte.php?user='.$_GET["user"].'&promote"  class="btn btn-primary" role="button" aria-pressed="true"><i class="fa fa-plus-square"></i>  Befördern</a>';
-	            echo '<a href="akte.php?user='.$_GET["user"].'&negative"  class="btn btn-danger" role="button" aria-pressed="true"><i class="fa fa-thumbs-down"></i>  Negativ aufgefallen</a>';
+	            echo '<a href="akte.php?user='.$_GET["user"].'&promote"  class="btn btn-primary" role="button" aria-pressed="true"><i class="fa fa-plus-square"></i>  Befördern  <span class="badge badge-light">'.strval($promotes).'</span></a>';
+	            echo '<a href="akte.php?user='.$_GET["user"].'&negative"  class="btn btn-danger" role="button" aria-pressed="true"><i class="fa fa-thumbs-down"></i>  Negativ aufgefallen  <span class="badge badge-light">'.strval($negatives).'</span></a>';
 	        }
+	        $demotes = runQuery("SELECT * FROM mtf_entries WHERE steamid='".$_GET["user"]."' AND type='demote'");
+	        $demotes = mysqli_num_rows($demotes);
 	        if($curRank > getRankIDByName($aktenRank) OR isAdmin()) {
-	            echo '<a href="akte.php?user='.$_GET["user"].'&demote"  class="btn btn-danger" role="button" aria-pressed="true"><i class="fa fa-minus-square"></i>  Degradieren</a>';
+	            echo '<a href="akte.php?user='.$_GET["user"].'&demote"  class="btn btn-danger" role="button" aria-pressed="true"><i class="fa fa-minus-square"></i>  Degradieren  <span class="badge badge-light">'.strval($demotes).'</span></a>';
 	        }
 	        $hiddenentry = runQuery("SELECT * FROM mtf_entries WHERE steamid='".$_GET["user"]."' AND type='hidden'");
 	        $hiddenentry = mysqli_num_rows($hiddenentry);
