@@ -115,4 +115,43 @@
         <?php
 	}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	function humanTiming ($time)
+	{
+
+	    $time = time() - $time; // to get the time since that moment
+	    $time = ($time<1)? 1 : $time;
+	    $tokens = array (
+	        31536000 => 'Jahr',
+	        2592000 => 'Monat',
+	        604800 => 'Woche',
+	        86400 => 'Tag',
+	        3600 => 'Stunde',
+	        60 => 'Minute',
+	        1 => 'Sekunde'
+	    );
+
+	    foreach ($tokens as $unit => $text) {
+	        if ($time < $unit) continue;
+	        $numberOfUnits = floor($time / $unit);
+	        return $numberOfUnits.' '.$text.(($text == "Monat")?'e':''.($text == "Jahr")?'e':''.($text == "Tag")?'e':''.($numberOfUnits>1)?'n':'');
+	    }
+
+	}
 ?>

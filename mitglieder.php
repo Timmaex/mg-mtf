@@ -533,19 +533,7 @@
 
 
 
-                    <?php
-                        $curRank = getUserRank();
-                        $can = $canPromoteTo[$curRank];
-                        $curRank = getRankIDByName(getUserRankBySteamID($_GET["user"]));
-                        if($can != "r") {
-                            $canID = getRankIDByName($can);
-                            if(isAdmin()) {
-                                $canID = 18;
-                            }
+                    <?php/*
 
-                            for($i = $curRank + 1; $i <= $canID; $i++) {
-                                echo '<option value="'.getRankByID($i).'">'.getRankByShortname(getRankByID($i)).'</option>';
-                            }
-                        }
-
+*/
                     ?>

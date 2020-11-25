@@ -26,6 +26,7 @@
 
 			// DEMOTE
 			if(isset($_GET["demote"])) {
+
 				$rank = getUserRankBySteamID($_GET["user"]);
 				if(getRankIDByName($rank) < getRankIDByName(getUserRank()) or isAdmin()) {
 
@@ -42,50 +43,50 @@
 							$canDo = false;
 						}
 
-						if(getRankIDByName($canPromoteTo[getUserRank()]) >= getRankIDByName(getUserRankBySteamID($_GET["user"])) or isAdmin()) {
+						if(getRankIDByName($canDemoteTo[getUserRank()]) >= getRankIDByName(getUserRankBySteamID($_GET["user"])) or isAdmin()) {
 							if($canDo) {
-								runQuery("INSERT INTO mtf_entries (steamid, offz_steamid, offz_name, time, text, type, value) VALUES ('".$steamid."', '".$offz_steamid."', '".$name."', '".$time."', '".$text."', 'promote', '".$newRank."')");
-								header("Location: akte.php?user=".$_GET["user"]."");
+								runQuery("INSERT INTO mtf_entries (steamid, offz_steamid, offz_name, time, text, type, value) VALUES ('".$steamid."', '".$offz_steamid."', '".$name."', '".$time."', '".$text."', 'demote', '".$newRank."')");
 								runQuery("UPDATE mtf_character SET rank='".$newRank."' WHERE steamid='".$_GET["user"]."'");
+								header("Location: akte.php?user=".$_GET["user"]."");
 							}
 						} else {
-							errorBox("Falsche Angaben!", "Du kannst nicht höher als bis zum ".$canPromoteTo[getUserRank()]." befördern!");
+							errorBox("Falsche Angaben!", "Du kannst keinen ".getUserRankBySteamID($_GET["user"])." demoten!");
 						}
 						
 					}
 
 					?>
 						<div class="text-center">
-							<h2><?php echo getFullMTFName($_GET["user"]); ?> befördern</h2>
+							<h2><?php echo getFullMTFName($_GET["user"]); ?> degradieren</h2>
 							<a class="btn btn-primary" href="akte.php?user=<?php echo $_GET["user"]; ?>"><i class="fa fa-arrow-left mr-2"></i>Zurück</a>
 							<br><br>
 						</div>
 
 						<form style="margin-right: 25%;">
 						  <input type='hidden' name='user' value='<?php echo $_GET["user"]; ?>' />
-						  <input type='hidden' name='promote' value='true' />
+						  <input type='hidden' name='demote' value='true' />
 						  <div class="form-group row">
 						    <label for="" class="col-4 col-form-label"></label> 
 						    <div class="col-8">
 						      <select id="" name="rank" class="custom-select" aria-describedby="HelpBlock">
 			                    <?php
 			                        $curRank = getUserRank();
-			                        $can = $canPromoteTo[$curRank];
+			                        $can = $canDemoteTo[$curRank];
 			                        $curRank = getRankIDByName(getUserRankBySteamID($_GET["user"]));
-			                        if($can != "r") {
+			                        if($can != "none") {
 			                            $canID = getRankIDByName($can);
 			                            if(isAdmin()) {
 			                                $canID = 18;
 			                            }
 
-			                            for($i = $curRank + 1; $i <= $canID; $i++) {
+			                            for($i = 1; $i <= $curRank - 1; $i++) {
 			                                echo '<option value="'.getRankByID($i).'">'.getRankByShortname(getRankByID($i)).'</option>';
 			                            }
 			                        }
 
 			                    ?>
 						      </select> 
-						      <span id="HelpBlock" class="form-text text-muted">Wähle den Rang, auf den du <?php echo getFullMTFName($_GET["user"]); ?> befördern möchtest.</span>
+						      <span id="HelpBlock" class="form-text text-muted">Wähle den Rang, auf den du <?php echo getFullMTFName($_GET["user"]); ?> demoten möchtest.</span>
 						    </div>
 						  </div>
 						  <div class="form-group row">
@@ -108,11 +109,186 @@
 						</form>
 					<?php
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+				// Delete one
+				if(isset($_GET["delete"])) {
+					if(hasRank("2lt") or isAdmin()) {
+						runQuery("DELETE FROM mtf_entries WHERE id='".$_GET["delete"]."'");
+						//header("Location: akte.php?user=".$_GET["user"]."&demote");
+						echo '<meta http-equiv="refresh" content = "0;url=akte.php?user='.$_GET["user"]."&demote".'">';
+						return;
+					}
+				}
+				$res = runQuery("SELECT * FROM mtf_entries WHERE steamid='".$_GET["user"]."' AND type='demote' ORDER BY id DESC");
+
+				if(mysqli_num_rows($res) == 0) {
+					?>
+						<div class="text-center">
+							<h3>Keine Einträge gefunden...</h3>
+						</div>
+						<br>
+						<br>
+						<br>
+						<br>
+						<br>
+						<br>
+					<?php
+					echo "</section>";
+					require("system/footer.php");
+					die();
+				}
+
+				while($entry = mysqli_fetch_assoc($res)) {
+					$offz = runQuery("SELECT * FROM mtf_user WHERE steamid32='".$entry["offz_steamid"]."'");
+
+					if(mysqli_num_rows($offz) == 0) {
+						$offz = array(
+							"avatarfull" => "assets/img/einheiten/pb_e6.png",
+						);
+					} else {
+						$offz = mysqli_fetch_array($offz);
+					}
+					
+					$offz_akte = runQuery("SELECT * FROM mtf_character WHERE steamid='".$entry["offz_steamid"]."'");
+					$isAvailable = true;
+					if(mysqli_num_rows($offz_akte) == 0) {
+						$isAvailable = false;
+					} else {
+						$offz_akte = mysqli_fetch_array($offz_akte);
+					}
+					?>
+					<div class="container">
+						<br>
+						<br>
+						<div class="card">
+						    <div class="card-body">
+						        <div class="row" style="min-height: 184px;">
+					        	    <div class="col-md-2">
+					        	        <img src="<?php echo $offz["avatarfull"]; ?>" height="184px" width="184px" class="img img-rounded img-fluid"/>
+						        	        <p class="text-secondary text-center">
+						        	        	<?php echo date("d.m.Y H:i", $entry["time"]); ?>
+						        	        	<?php echo "<br>Vor ".humanTiming($entry["time"]); ?>
+						        	        </p>
+					        	    </div>
+					        	    <div class="col-md-10">
+					        	        <p>
+					        	            <a class="float-left" href="akte.php?user=<?php echo $entry["offz_steamid"]; ?>"><strong><?php if($isAvailable == false) {echo $entry["offz_name"]." (Nicht mehr im Dienst)"; } else { echo getFullMTFName($offz_akte["steamid"]); } ?></strong></a>
+					        	            <a class="float-right text-danger" href="akte.php?user=<?php echo $entry["steamid"]; ?>&demote&delete=<?php echo $entry["id"]; ?>"><strong>Löschen</strong></a>
+					        	       </p>
+					        	       <div class="clearfix"></div>
+					        	        <p><?php echo $entry["text"]; ?></p>
+					        	    </div>
+						        </div>
+						    </div>
+						</div>
+					</div>
+					<?php
+				}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 					echo "</section>";
 					require("system/footer.php");
 					die();					
 				}
+
+
+
 			}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 			// PROMOTE
 			if(isset($_GET["promote"])) {
@@ -135,8 +311,8 @@
 						if(getRankIDByName($canPromoteTo[getUserRank()]) >= getRankIDByName(getUserRankBySteamID($_GET["user"])) or isAdmin()) {
 							if($canDo) {
 								runQuery("INSERT INTO mtf_entries (steamid, offz_steamid, offz_name, time, text, type, value) VALUES ('".$steamid."', '".$offz_steamid."', '".$name."', '".$time."', '".$text."', 'promote', '".$newRank."')");
-								header("Location: akte.php?user=".$_GET["user"]."");
 								runQuery("UPDATE mtf_character SET rank='".$newRank."' WHERE steamid='".$_GET["user"]."'");
+								header("Location: akte.php?user=".$_GET["user"]."");
 							}
 						} else {
 							errorBox("Falsche Angaben!", "Du kannst nicht höher als bis zum ".$canPromoteTo[getUserRank()]." befördern!");
@@ -198,11 +374,113 @@
 						</form>
 					<?php
 
+					// Delete one
+					if(isset($_GET["delete"])) {
+						if(hasRank("2lt") or isAdmin()) {
+							runQuery("DELETE FROM mtf_entries WHERE id='".$_GET["delete"]."'");
+							echo '<meta http-equiv="refresh" content = "0;url=akte.php?user='.$_GET["user"]."&promote".'">';
+						}
+					}
+					$res = runQuery("SELECT * FROM mtf_entries WHERE steamid='".$_GET["user"]."' AND type='promote' ORDER BY id DESC");
+
+					if(mysqli_num_rows($res) == 0) {
+						?>
+							<div class="text-center">
+								<h3>Keine Einträge gefunden...</h3>
+							</div>
+							<br>
+							<br>
+							<br>
+							<br>
+							<br>
+							<br>
+						<?php
+						echo "</section>";
+						require("system/footer.php");
+						die();
+					}
+
+					while($entry = mysqli_fetch_assoc($res)) {
+						$offz = runQuery("SELECT * FROM mtf_user WHERE steamid32='".$entry["offz_steamid"]."'");
+
+						if(mysqli_num_rows($offz) == 0) {
+							$offz = array(
+								"avatarfull" => "assets/img/einheiten/pb_e6.png",
+							);
+						} else {
+							$offz = mysqli_fetch_array($offz);
+						}
+						
+						$offz_akte = runQuery("SELECT * FROM mtf_character WHERE steamid='".$entry["offz_steamid"]."'");
+						$isAvailable = true;
+						if(mysqli_num_rows($offz_akte) == 0) {
+							$isAvailable = false;
+						} else {
+							$offz_akte = mysqli_fetch_array($offz_akte);
+						}
+						?>
+						<div class="container">
+							<br>
+							<br>
+							<div class="card">
+							    <div class="card-body">
+							        <div class="row" style="min-height: 184px;">
+						        	    <div class="col-md-2">
+						        	        <img src="<?php echo $offz["avatarfull"]; ?>" height="184px" width="184px" class="img img-rounded img-fluid"/>
+						        	        <p class="text-secondary text-center">
+						        	        	<?php echo date("d.m.Y H:i", $entry["time"]); ?>
+						        	        	<?php echo "<br>Vor ".humanTiming($entry["time"]); ?>
+						        	        </p>
+						        	    </div>
+						        	    <div class="col-md-10">
+						        	        <p>
+						        	            <a class="float-left" href="akte.php?user=<?php echo $entry["offz_steamid"]; ?>"><strong><?php if($isAvailable == false) {echo $entry["offz_name"]." (Nicht mehr im Dienst)"; } else { echo getFullMTFName($offz_akte["steamid"]); } ?></strong></a>
+						        	            <a class="float-right text-danger" href="akte.php?user=<?php echo $entry["steamid"]; ?>&promote&delete=<?php echo $entry["id"]; ?>"><strong>Löschen</strong></a>
+						        	       </p>
+						        	       <div class="clearfix"></div>
+						        	        <p><?php echo $entry["text"]; ?></p>
+						        	    </div>
+							        </div>
+							    </div>
+							</div>
+						</div>
+						<?php
+					}
+
 					echo "</section>";
 					require("system/footer.php");
 					die();					
 				}
 			}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 			// Negative entry
 			if(isset($_GET["negative"])) {
@@ -254,6 +532,79 @@
 		                  </div> 
 		                </form>
 					<?php
+
+					// Delete one
+					if(isset($_GET["delete"])) {
+						if(hasRank("2lt") or isAdmin()) {
+							runQuery("DELETE FROM mtf_entries WHERE id='".$_GET["delete"]."'");
+							echo '<meta http-equiv="refresh" content = "0;url=akte.php?user='.$_GET["user"]."&negative".'">';
+						}
+					}
+					$res = runQuery("SELECT * FROM mtf_entries WHERE steamid='".$_GET["user"]."' AND type='negative' ORDER BY id DESC");
+
+					if(mysqli_num_rows($res) == 0) {
+						?>
+							<div class="text-center">
+								<h3>Keine Einträge gefunden...</h3>
+							</div>
+							<br>
+							<br>
+							<br>
+							<br>
+							<br>
+							<br>
+						<?php
+						echo "</section>";
+						require("system/footer.php");
+						die();
+					}
+
+					while($entry = mysqli_fetch_assoc($res)) {
+						$offz = runQuery("SELECT * FROM mtf_user WHERE steamid32='".$entry["offz_steamid"]."'");
+
+						if(mysqli_num_rows($offz) == 0) {
+							$offz = array(
+								"avatarfull" => "assets/img/einheiten/pb_e6.png",
+							);
+						} else {
+							$offz = mysqli_fetch_array($offz);
+						}
+						
+						$offz_akte = runQuery("SELECT * FROM mtf_character WHERE steamid='".$entry["offz_steamid"]."'");
+						$isAvailable = true;
+						if(mysqli_num_rows($offz_akte) == 0) {
+							$isAvailable = false;
+						} else {
+							$offz_akte = mysqli_fetch_array($offz_akte);
+						}
+						?>
+						<div class="container">
+							<br>
+							<br>
+							<div class="card">
+							    <div class="card-body">
+							        <div class="row" style="min-height: 184px;">
+						        	    <div class="col-md-2">
+						        	        <img src="<?php echo $offz["avatarfull"]; ?>" height="184px" width="184px" class="img img-rounded img-fluid"/>
+						        	        <p class="text-secondary text-center">
+						        	        	<?php echo date("d.m.Y H:i", $entry["time"]); ?>
+						        	        	<?php echo "<br>Vor ".humanTiming($entry["time"]); ?>
+						        	        </p>
+						        	    </div>
+						        	    <div class="col-md-10">
+						        	        <p>
+						        	            <a class="float-left" href="akte.php?user=<?php echo $entry["offz_steamid"]; ?>"><strong><?php if($isAvailable == false) {echo $entry["offz_name"]." (Nicht mehr im Dienst)"; } else { echo getFullMTFName($offz_akte["steamid"]); } ?></strong></a>
+						        	            <a class="float-right text-danger" href="akte.php?user=<?php echo $entry["steamid"]; ?>&negative&delete=<?php echo $entry["id"]; ?>"><strong>Löschen</strong></a>
+						        	       </p>
+						        	       <div class="clearfix"></div>
+						        	        <p><?php echo $entry["text"]; ?></p>
+						        	    </div>
+							        </div>
+							    </div>
+							</div>
+						</div>
+						<?php
+					}
 
 					echo "</section>";
 					require("system/footer.php");
@@ -311,23 +662,104 @@
 		                  </div> 
 		                </form>
 					<?php
+					// Delete one
+					if(isset($_GET["delete"])) {
+						if(hasRank("2lt") or isAdmin()) {
+							runQuery("DELETE FROM mtf_entries WHERE id='".$_GET["delete"]."'");
+							echo '<meta http-equiv="refresh" content = "0;url=akte.php?user='.$_GET["user"]."&positive".'">';
+						}
+					}
+					$res = runQuery("SELECT * FROM mtf_entries WHERE steamid='".$_GET["user"]."' AND type='positive' ORDER BY id DESC");
 
+					if(mysqli_num_rows($res) == 0) {
+						?>
+							<div class="text-center">
+								<h3>Keine Einträge gefunden...</h3>
+							</div>
+							<br>
+							<br>
+							<br>
+							<br>
+							<br>
+							<br>
+						<?php
+						echo "</section>";
+						require("system/footer.php");
+						die();
+					}
+
+					while($entry = mysqli_fetch_assoc($res)) {
+						$offz = runQuery("SELECT * FROM mtf_user WHERE steamid32='".$entry["offz_steamid"]."'");
+
+						if(mysqli_num_rows($offz) == 0) {
+							$offz = array(
+								"avatarfull" => "assets/img/einheiten/pb_e6.png",
+							);
+						} else {
+							$offz = mysqli_fetch_array($offz);
+						}
+						
+						$offz_akte = runQuery("SELECT * FROM mtf_character WHERE steamid='".$entry["offz_steamid"]."'");
+						$isAvailable = true;
+						if(mysqli_num_rows($offz_akte) == 0) {
+							$isAvailable = false;
+						} else {
+							$offz_akte = mysqli_fetch_array($offz_akte);
+						}
+						?>
+						<div class="container">
+							<br>
+							<br>
+							<div class="card">
+							    <div class="card-body">
+							        <div class="row" style="min-height: 184px;">
+						        	    <div class="col-md-2">
+						        	        <img src="<?php echo $offz["avatarfull"]; ?>" height="184px" width="184px" class="img img-rounded img-fluid"/>
+						        	        <p class="text-secondary text-center">
+						        	        	<?php echo date("d.m.Y H:i", $entry["time"]); ?>
+						        	        	<?php echo "<br>Vor ".humanTiming($entry["time"]); ?>
+						        	        </p>
+						        	    </div>
+						        	    <div class="col-md-10">
+						        	        <p>
+						        	            <a class="float-left" href="akte.php?user=<?php echo $entry["offz_steamid"]; ?>"><strong><?php if($isAvailable == false) {echo $entry["offz_name"]." (Nicht mehr im Dienst)"; } else { echo getFullMTFName($offz_akte["steamid"]); } ?></strong></a>
+						        	            <a class="float-right text-danger" href="akte.php?user=<?php echo $entry["steamid"]; ?>&positive&delete=<?php echo $entry["id"]; ?>"><strong>Löschen</strong></a>
+						        	       </p>
+						        	       <div class="clearfix"></div>
+						        	        <p><?php echo $entry["text"]; ?></p>
+						        	    </div>
+							        </div>
+							    </div>
+							</div>
+						</div>
+						<?php
+					}
 					echo "</section>";
 					require("system/footer.php");
 					die();					
 				}
+
 			}
 
-			// Hidden entried
+
+
+
+
+
+
+
+
+			// Hidden entries
 			if(isset($_GET["hidden"])) {
 				if(!isAdmin()) {
 					minRankRequired("maj", "akte.php?user=".$_GET["user"]);
 				}
 
-				// Delete one
 				if(isset($_GET["delete"])) {
-					runQuery("DELETE FROM mtf_entries WHERE id='".$_GET["delete"]."'");
-					header("Location: akte.php?user=".$_GET["user"]."&hidden");
+					if(hasRank("2lt") or isAdmin()) {
+						runQuery("DELETE FROM mtf_entries WHERE id='".$_GET["delete"]."'");
+						header("Location: akte.php?user=".$_GET["user"]."&hidden");
+					}
 				}
 
 				// Submit
@@ -429,7 +861,10 @@
 						        <div class="row" style="min-height: 184px;">
 					        	    <div class="col-md-2">
 					        	        <img src="<?php echo $offz["avatarfull"]; ?>" height="184px" width="184px" class="img img-rounded img-fluid"/>
-					        	        <p class="text-secondary text-center"><?php echo date("d.m.Y H:i", $entry["time"]); ?></p>
+						        	        <p class="text-secondary text-center">
+						        	        	<?php echo date("d.m.Y H:i", $entry["time"]); ?>
+						        	        	<?php echo "<br>Vor ".humanTiming($entry["time"]); ?>
+						        	        </p>
 					        	    </div>
 					        	    <div class="col-md-10">
 					        	        <p>

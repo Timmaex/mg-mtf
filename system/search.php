@@ -1,6 +1,6 @@
 <?php
 
-$db = mysqli_connect("90.186.173.187", "mtf", "mImdfhoxdGM2mdpD", "mtf_site");
+$db = mysqli_connect("90.186.198.210", "mtf", "mImdfhoxdGM2mdpD", "mtf_site");
 
  
 if(isset($_REQUEST["term"])){

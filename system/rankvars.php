@@ -97,4 +97,27 @@
         "lcol" => "maj",
         "col" => "lcol"
     );
+
+    $canDemoteTo = array(
+        "r" => "none",
+        "pvt" => "none",
+        "pfc" => "none",
+        "spc" => "none",
+        "lcpl" => "none",
+        "cpl" => "none",
+
+        "sgt" => "pvt",
+        "ssgt" => "pfc",
+        "sfc" => "cpl",
+        "fsg" => "cpl",
+        "sgm" => "sgt",
+        "csm" => "sgt",
+
+        "2lt" => "csm",
+        "1lt" => "csm",
+        "cpt" => "2lt",
+        "maj" => "cpt",
+        "lcol" => "maj",
+        "col" => "lcol"
+    );
 ?>
