@@ -74,6 +74,47 @@
 footer a.text-light:hover { color: #fed136!important; text-decoration: none; }
 footer .cizgi { border-right: 1px solid #535e67; }
 
+.dropbtn {
+  background-color: none;
+  color: white;
+  padding: 0px;
+  font-size: 0px;
+  border: none;
+  cursor: pointer;
+  border: none;
+}
+
+.dropbtn:hover, .dropbtn:focus {
+  background-color: none;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.property-content {
+  display: none;
+  position: absolute;
+  background-color: #f1f1f1;
+  min-width: 160px;
+  overflow: auto;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.property-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown a:hover {color: #007bff;}
+
+.dropdown a {color: white; background-color: #303030;}
+
+.show {display: block;}
 </style>
 <nav class="navbar navbar-expand-lg">
         <div class="container">
@@ -93,7 +134,7 @@ footer .cizgi { border-right: 1px solid #535e67; }
                         <a class="nav-link" href="stats.php"><i class="fa fa-info-circle fa-fw mr-1"></i>Statistik</a>
                     </li>
                     <li class="nav-item pl-1">
-                        <a class="nav-link" href="dokumente.php"><i class="fa fa-phone fa-fw fa-rotate-180 mr-1"></i>Dokumente</a>
+                        <a class="nav-link" href="dokumente.php"><i class="fa fa-file fa-fw mr-1"></i>Dokumente</a>
                     </li>
                     <li class="nav-item pl-1">
                         <a class="nav-link" href="akte.php"><i class="fa fa-user-plus fa-fw mr-1"></i>Akte</a>
@@ -101,10 +142,60 @@ footer .cizgi { border-right: 1px solid #535e67; }
                     <li class="nav-item pl-1">
                         <a class="nav-link" href="mitglieder.php"><i class="fa fa-user fa-fw mr-1"></i>Mitglieder</a>
                     </li>
+                <?php
+                    if(isLoggedIn()) {
+                        $user = runQuery("SELECT * FROM mtf_user WHERE steamid64='".$_SESSION["steamid"]."'");
+                        $user = mysqli_fetch_array($user);
+                        //echo '<a href="login.php?logout"><img width="25%" class="ml-3 float-right rounded-circle float-left" src="'.$user["avatarfull"].'" alt=""></img></a>';
+                        ?>
+                            <div class="dropdown">
+                              <input type="image" onclick="openPropertySheet()" src="<?php echo $user["avatarfull"]?>" width="32" class="rounded-circle dropbtn mt-2 ml-2" height="32">
+                              <div id="propertySheet" class="property-content" style="background-color: #303030;">
+                                <a href="#home">Home</a>
+                                <a href="#about">About</a>
+                                <div style="height: 1px; width: 95%; background-color: #007bff; margin-left: 2.5%;"></div>
+                                <a href="login.php?logout">Ausloggen</a>
+                              </div>
+                            </div>
+                        <?php
+                        //echo $user["url"];
+                    } else {
+                            $button = array();
+
+                            $buttonstyle = "square";
+                            $button['rectangle'] = "0";
+                            $button['square'] = "01";
+                            $button = "<a href='login.php?login=true' class='ml-3 float-right rounded-circle float-left'><img src='https://steamcommunity-a.akamaihd.net/public/images/signinthroughsteam/sits_".$button[$buttonstyle].".png'></a>";
+                            
+                            echo $button;                       
+                    }
+                ?>                    
                 </ul>
             </div>
         </div>
     </nav>
+
+<script>
+/* When the user clicks on the button, 
+toggle between hiding and showing the dropdown content */
+function openPropertySheet() {
+  document.getElementById("propertySheet").classList.toggle("show");
+}
+
+// Close the dropdown if the user clicks outside of it
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+    var dropdowns = document.getElementsByClassName("property-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+</script>
 
 <!-- Masthead-->
 <header class="masthead">

@@ -956,7 +956,7 @@
 	        $promotes = mysqli_num_rows($promotes);
 	        $negatives = runQuery("SELECT * FROM mtf_entries WHERE steamid='".$_GET["user"]."' AND type='negative'");
 	        $negatives = mysqli_num_rows($negatives);
-	        if(getRankIDByName($aktenRank) <= getRankIDByName($canPromoteTo[getUserRank()]) OR isAdmin() AND $aktenRank != "col") {
+	        if(getRankIDByName($aktenRank) <= getRankIDByName($canPromoteTo[getUserRank()]) OR isAdmin() AND ($aktenRank != "col") or isAdmin()) {
 	            echo '<a href="akte.php?user='.$_GET["user"].'&promote"  class="btn btn-primary" role="button" aria-pressed="true"><i class="fa fa-plus-square"></i>  Befördern  <span class="badge badge-light">'.strval($promotes).'</span></a>';
 	            echo '<a href="akte.php?user='.$_GET["user"].'&negative"  class="btn btn-danger" role="button" aria-pressed="true"><i class="fa fa-thumbs-down"></i>  Negativ aufgefallen  <span class="badge badge-light">'.strval($negatives).'</span></a>';
 	        }
