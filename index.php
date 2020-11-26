@@ -12,6 +12,8 @@
         $info = mysqli_fetch_array($info);
 
         ?>
+
+        
         <section class="page-section" id="info">
             <div class="text-center">
                 <center>

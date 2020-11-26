@@ -15,6 +15,7 @@
 
 			if(!isset($_GET["user"])) {
 				header("Location: akte.php?user=".getSteamID32());
+				die();
 			}
 
 			$steamid = $_GET["user"];
