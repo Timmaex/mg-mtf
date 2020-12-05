@@ -1,11 +1,23 @@
 <?php
 	require("system/database.php");
 
+	if(!isset($_GET["user"])) {
+		header("Location: akte.php?user=".toSteamID($_SESSION["steamid"]));
+		die();
+	}
+	if(isset($_GET["user"])) {
+		$steamid = $_GET["user"];
+		$test = runQuery("SELECT * FROM mtf_character WHERE steamid='".$steamid."'");
+		if(mysqli_num_rows($test) == 0) {
+			errorBox("Es ist ein Fehler aufgetreten!", "Die angegebene SteamID32 in der URL existiert nicht!");
+			die();
+		}
+	}
+
 	$header = "Personalakte";
 	$subheader = "Hier findest du alle Einträge dieser Akte";
 
 	require("system/navbar.php"); 
-
 ?>
 
 <section class="page-section bg-light text-center" id="akte">
@@ -13,16 +25,18 @@
 	<?php
 		if(isLoggedIn() == true or isset($_GET["user"])) {
 
-			if(!isset($_GET["user"])) {
-				header("Location: akte.php?user=".getSteamID32());
-				die();
-			}
 
-			$steamid = $_GET["user"];
-			$test = runQuery("SELECT * FROM mtf_character WHERE steamid='".$steamid."'");
-			if(mysqli_num_rows($test) == 0) {
-				errorBox("Es ist ein Fehler aufgetreten!", "Die angegebene SteamID32 in der URL existiert nicht!");
-				die();
+			//CHANGEJOB
+			if(isset($_GET["changeJob"])) {
+				$job = $_GET["job"];
+				if($job != "d5" && $job != "n7" && $job != "e6") {
+					errorBox("Es ist ein Fehler aufgetreten!", "Der angegebene Job existiert nicht!");
+					die();
+				}
+				if(hasRank("maj") or isAdmin()) {
+					runQuery("UPDATE mtf_character SET job='".$job."' WHERE steamid='".$_GET["user"]."'");
+					echo '<meta http-equiv="refresh" content = "0;url=akte.php?user='.$_GET["user"].'">';
+				}
 			}
 
 			// DEMOTE
@@ -31,7 +45,8 @@
 				$rank = getUserRankBySteamID($_GET["user"]);
 				if(getRankIDByName($rank) < getRankIDByName(getUserRank()) or isAdmin()) {
 
-					if(isset($_GET["text"])) {+
+
+					if(isset($_GET["text"])) {
 						$offz_steamid = getSteamID32();
 						$name = getFullMTFName($offz_steamid);
 						$time = strval(time());
@@ -48,13 +63,14 @@
 							if($canDo) {
 								runQuery("INSERT INTO mtf_entries (steamid, offz_steamid, offz_name, time, text, type, value) VALUES ('".$steamid."', '".$offz_steamid."', '".$name."', '".$time."', '".$text."', 'demote', '".$newRank."')");
 								runQuery("UPDATE mtf_character SET rank='".$newRank."' WHERE steamid='".$_GET["user"]."'");
-								header("Location: akte.php?user=".$_GET["user"]."");
+								echo '<meta http-equiv="refresh" content = "0;url=akte.php?user='.$_GET["user"].'">';
 							}
 						} else {
 							errorBox("Falsche Angaben!", "Du kannst keinen ".getUserRankBySteamID($_GET["user"])." demoten!");
 						}
 						
 					}
+
 
 					?>
 						<div class="text-center">
@@ -68,13 +84,14 @@
 						  <input type='hidden' name='demote' value='true' />
 						  <div class="form-group row">
 						    <label for="" class="col-4 col-form-label"></label> 
-						    <div class="col-8">
+						    <div class="col-8">					    	
 						      <select id="" name="rank" class="custom-select" aria-describedby="HelpBlock">
 			                    <?php
 			                        $curRank = getUserRank();
 			                        $can = $canDemoteTo[$curRank];
+
 			                        $curRank = getRankIDByName(getUserRankBySteamID($_GET["user"]));
-			                        if($can != "none") {
+			                        if($can != "none" or isAdmin()) {
 			                            $canID = getRankIDByName($can);
 			                            if(isAdmin()) {
 			                                $canID = 18;
@@ -296,7 +313,7 @@
 				$rank = getUserRankBySteamID($_GET["user"]);
 				if(getRankIDByName($rank) < getRankIDByName(getUserRank()) or isAdmin()) {
 
-					if(isset($_GET["text"])) {+
+					if(isset($_GET["text"])) {
 						$offz_steamid = getSteamID32();
 						$name = getFullMTFName($offz_steamid);
 						$time = strval(time());
@@ -945,7 +962,30 @@
             <br>
             <div class="text-center">
             <div class="btn-group float-middle" role="group">
+
             <?php
+	        if(hasRank("maj") OR isAdmin()) {
+	            ?>
+				<div class="dropdown">
+				  <button class="btn btn-warning dropdown-toggle" type="button" role="button" aria-pressed="true" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				    Einheit wechseln
+				  </button>
+				  <div class="dropdown-menu bg-dark" aria-labelledby="dropdownMenuButton">
+				    <?php 
+				    	if($kekw["job"] != "n7") {
+				    		echo '<a class="dropdown-item btn-primary" href="akte.php?user='.$_GET["user"].'&changeJob&job=n7">Nu-7</a>';
+				    	}
+				    	if($kekw["job"] != "d5") {
+				    		echo '<a class="dropdown-item btn-primary" href="akte.php?user='.$_GET["user"].'&changeJob&job=d5">Delta-5</a>';
+				    	}
+				    	if($kekw["job"] != "e6") {
+				    		echo '<a class="dropdown-item btn-primary" href="akte.php?user='.$_GET["user"].'&changeJob&job=e6">Epsilon-6</a>';
+				    	}
+				    ?>
+				  </div>
+				</div>
+	            <?php
+	        }	            
             $curRank = getRankIDByName(getUserRank());
             $aktenRank = $kekw["rank"];
 	        $positives = runQuery("SELECT * FROM mtf_entries WHERE steamid='".$_GET["user"]."' AND type='positive'");
@@ -965,12 +1005,14 @@
 	        $demotes = mysqli_num_rows($demotes);
 	        if($curRank > getRankIDByName($aktenRank) OR isAdmin()) {
 	            echo '<a href="akte.php?user='.$_GET["user"].'&demote"  class="btn btn-danger" role="button" aria-pressed="true"><i class="fa fa-minus-square"></i>  Degradieren  <span class="badge badge-light">'.strval($demotes).'</span></a>';
-	        }
+	        }        
 	        $hiddenentry = runQuery("SELECT * FROM mtf_entries WHERE steamid='".$_GET["user"]."' AND type='hidden'");
 	        $hiddenentry = mysqli_num_rows($hiddenentry);
 	        if(hasRank("maj") OR isAdmin()) {
 	            echo '<a href="akte.php?user='.$_GET["user"].'&hidden"  class="btn btn-secondary" role="button" aria-pressed="true"><i class="fa fa-align-justify"></i>  Geheimakte einsehen  <span class="badge badge-light">'.strval($hiddenentry).'</span></a>';
 	        }
+
+
 
 	        ?>
 	    	</div>

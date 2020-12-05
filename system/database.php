@@ -16,7 +16,9 @@
 		global $db;
 		$res = mysqli_query($db, $sql);
 		if(!$res) {
+			echo "<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>DEAD: ";
 			echo mysqli_error($db);
+			die();
 		}
 		return $res;
 	}
@@ -33,11 +35,8 @@
 	}
 
 	function getSteamID32() {
-		if(!isset($_SESSION["steamid"])) { return; }
-   		$s32 = runQuery("SELECT steamid32 FROM mtf_user WHERE steamid64='".$_SESSION["steamid"]."'");
-   		if(mysqli_num_rows($s32) == 0) { return; }
-   		$s32 = mysqli_fetch_array($s32);
-   		return $s32["steamid32"];
+		if(!isset($_SESSION["steamid"])) { return "error"; }
+		return strval(toSteamID($_SESSION["steamid"]));
 	}
 
 	function getUserRank() {

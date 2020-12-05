@@ -103,7 +103,7 @@
         </div>
         <div class="row">
         <?php
-            $kek = runQuery("SELECT * FROM mtf_character WHERE rank='col' OR rank='lcol' OR rank='maj' ORDER BY FIELD(rank, 'col', 'lcol', 'maj')");
+            $kek = runQuery("SELECT * FROM mtf_character WHERE rank='col' OR rank='lcol' ORDER BY FIELD(rank, 'col', 'lcol')");
             $leitungen = mysqli_num_rows($kek);
 
             while($row = mysqli_fetch_assoc($kek)) {
