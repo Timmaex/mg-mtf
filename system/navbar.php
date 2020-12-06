@@ -23,16 +23,22 @@
 
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="css/styles.css" rel="stylesheet"/>
+    <?php
+      echo '<link href="css/'.getTheme().'.css" rel="stylesheet"/>';
+    ?>
+    
 
-    <!--<link href="css/slate.css" rel="stylesheet"/>-->
+    <!--<link href="css/slate.css" rel="stylesheet"/>       echo getTheme();            -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"> 
 
 
 
 
 </head>
+<?php
+  if(!isset($_GET["submit"]) and !isset($_GET["text"]) and !isset($_GET["comment"])) {
 
-
+?>
 <nav class="navbar sticky-top navbar-expand-md navbar-dark bg-dark">
     <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
         <ul class="navbar-nav mr-auto">
@@ -64,7 +70,40 @@
           <li class="nav-item">
             <a class="nav-link" href="mitglieder.php"><i class="fa fa-user"></i>Mitglieder</a>
           </li>
+
+
+
+          <li class="nav-item">
+            <a class="nav-link" href="todolist.php"><i class="fa fa-user"></i>Todo</a>
+          </li>
+
+
+
+
+
+
+
+
+
+
+
         </ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     </div>
 
 
@@ -143,3 +182,6 @@
 
     </div>
 </header>
+
+<?php
+}

@@ -114,6 +114,18 @@
         <?php
 	}
 
+	function getTheme() {
+		if(isLoggedIn()) {
+			$data = runQuery("SELECT theme FROM mtf_user WHERE steamid32='".getSteamID32()."'");
+			if(mysqli_num_rows($data) == 0) {
+				return "default";
+			}
+			$data = mysqli_fetch_array($data);
+			return $data["theme"];
+		} else {
+			return "default";
+		}
+	}
 
 
 
@@ -131,8 +143,7 @@
 
 
 
-	function humanTiming ($time)
-	{
+	function humanTiming($time) {
 
 	    $time = time() - $time; // to get the time since that moment
 	    $time = ($time<1)? 1 : $time;
@@ -152,5 +163,56 @@
 	        return $numberOfUnits.' '.$text.(($text == "Monat")?'e':''.($text == "Jahr")?'e':''.($text == "Tag")?'e':''.($numberOfUnits>1)?'n':'');
 	    }
 
+	}
+
+	function displayEntry($short, $time, $entry, $isAvailable, $offz_akte, $offz) {
+		?>
+			<div class="container">
+				<br>
+				<br>
+				<div class="card">
+				    <div class="card-body">
+				        <div class="row" style="min-height: 184px;">
+			        	    <div class="col-md-2">
+			        	        <img src="<?php echo $offz["avatarfull"]; ?>" height="184px" width="184px" class="img img-rounded img-fluid"/>
+			        	        <p class="text-secondary text-center">
+			        	        	<?php echo date("d.m.Y H:i", $time); ?>
+			        	        	<?php echo "<br>Vor ".humanTiming($time); ?>
+			        	        </p>
+			        	    </div>
+			        	    <div class="col-md-10">
+			        	        <p>
+			        	            <a class="float-left" href="akte.php?user=<?php echo $entry["offz_steamid"]; ?>"><strong><?php if($isAvailable == false) {echo $entry["offz_name"]." (Nicht mehr im Dienst)"; } else { echo getFullMTFName($offz_akte["steamid"]); } ?></strong></a>
+			        	            <a class="float-right text-danger" href="akte.php?user=<?php echo $entry["steamid"]."&".$short; ?>&delete=<?php echo $entry["id"]; ?>"><strong>Löschen</strong></a>
+			            	    </p>
+						        <div class="clearfix"></div>
+						        <?php
+						        	if($short == "promote") {
+						        		echo "<strong>Beförderung von </strong>".$entry["offz_name"];
+						        		echo "<br><strong>Alter Rang -> Neuer Rang: </strong>[".strtoupper(getRankByID(getRankIDByName($entry["append"])))."] => [".strtoupper($entry["value"])."]";
+						        		echo "<br><strong>Grund: </strong>".$entry["text"];
+						        	}
+						        	if($short == "demote") {
+						        		echo "<strong>Degradierung von </strong>".$entry["offz_name"];
+						        		echo "<br><strong>Alter Rang -> Neuer Rang: </strong>[".strtoupper(getRankByID(getRankIDByName($entry["append"])))."] => [".strtoupper($entry["value"])."]";
+						        		echo "<br><strong>Grund: </strong>".$entry["text"];
+						        	}	
+						        	if($short == "negative") {
+						        		echo "<strong>Negativer Eintrag von </strong>".$entry["offz_name"];
+						        		echo "<br><strong>Dauer: </strong>[ll]";
+						        		echo "<br><strong>Grund: </strong>".$entry["text"];
+						        	}
+						        	if($short == "positive") {
+						        		echo "<strong>Positiver Eintrag von </strong>".$entry["offz_name"];
+						        		echo "<br><strong>Aktiv: </strong><span class='text-danger'>Nein</span>";
+						        		echo "<br><strong>Grund: </strong>".$entry["text"];
+						        	}						        	
+						        ?>
+				       	    </div>
+				        </div>
+				    </div>
+				</div>
+			</div>
+		<?php
 	}
 ?>

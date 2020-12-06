@@ -56,7 +56,7 @@
         echo "<br>".$sid32;
 
           if(is_null($row["id"])){
-            $kek = runQuery("INSERT INTO mtf_user (name, url, steamid64, steamid32, avatarfull, mg_profile) VALUES ('". $steamname ."', '". $profile ."', '". $sid64 ."', '". $sid32 ."', '". $avatar ."', '')");
+            $kek = runQuery("INSERT INTO mtf_user (name, url, steamid64, steamid32, avatarfull, mg_profile, theme, lastUpdate) VALUES ('". $steamname ."', '". $profile ."', '". $sid64 ."', '". $sid32 ."', '". $avatar ."', '', 'default', '0')");
             if(!$kek) {
               die("You suck");
             }
