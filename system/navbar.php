@@ -129,6 +129,7 @@
                 <div class="dropdown-menu dropdown-menu-right pull-right" aria-labelledby="navbarDropdown">
                   <a class="dropdown-item" href="akte.php">Persönliche Akte</a>
                   <a class="dropdown-item" href="themes.php">Themes</a>
+                  <a class="dropdown-item" href="profile.php">MG-Profil einstellen</a>
                   <div class="dropdown-divider"></div>
                   <a class="dropdown-item" href="login.php?logout">Abmelden</a>
                 </div>

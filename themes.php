@@ -4,6 +4,10 @@
 <?php 
     require("system/database.php");
 
+    if(!isLoggedIn()) {
+        header("Location: index.php");
+    }
+
     $header = "Themes";
     $subheader = "Hier kannst du verschiedene Themes für die MTF-Seite auswählen";
 

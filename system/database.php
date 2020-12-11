@@ -4,7 +4,7 @@
 
 	session_start();
 
-	$db = mysqli_connect("90.186.198.210", "mtf", "mImdfhoxdGM2mdpD", "mtf_site");
+	$db = mysqli_connect("90.186.122.152", "mtf", "mImdfhoxdGM2mdpD", "mtf_site");
 
 	if (!$db) {
 	    echo "Fehler: konnte nicht mit MySQL verbinden." . PHP_EOL;
@@ -21,6 +21,13 @@
 			die();
 		}
 		return $res;
+	}
+
+	function getUserVar($steamid32, $var) {
+		$res = runQuery("SELECT $var FROM mtf_user WHERE steamid32='$steamid32'");
+		if(mysqli_num_rows($res) == 0) { return "User not found"; }
+		$res = mysqli_fetch_array($res);
+		return $res[$var];
 	}
 
 	function isLoggedIn() {
@@ -108,6 +115,17 @@
 		?>
         <br>
         <div style="width: 50%; margin-left: 25%;" class="alert alert-danger col-12" role="alert">
+          <h4 class="alert-heading"><?php echo $title; ?></h4>
+          <p><?php echo $text; ?></p>
+        </div>		
+        <?php
+	}
+
+
+	function successBox($title, $text) {
+		?>
+        <br>
+        <div style="width: 75%; margin-left: 12.5%;" class="alert alert-success col-12" role="alert">
           <h4 class="alert-heading"><?php echo $title; ?></h4>
           <p><?php echo $text; ?></p>
         </div>		
