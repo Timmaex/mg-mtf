@@ -251,7 +251,7 @@
   }
 
 </style>
-
+  <!--<meta http-equiv="refresh" content="2">-->
   </head>
   <body class="plain error-page-wrapper background-color background-image">
     <div class="content-container">

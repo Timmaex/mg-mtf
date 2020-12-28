@@ -4,7 +4,34 @@
 
 	session_start();
 
-	$db = @mysqli_connect("90.186.122.152", "mtf", "mImdfhoxdGM2mdpD", "mtf_site");
+	function die_again() {
+		$db = false;
+	    while(!$db) {
+	    	sleep(5);
+			$timeout = 2;  /* thirty seconds for timeout */
+			@$db = mysqli_init();
+			@$db->options( MYSQLI_OPT_CONNECT_TIMEOUT, $timeout );
+			if(!@$db->real_connect("90.186.122.152", "mtf", "mImdfhoxdGM2mdpD", "mtf_site")) {
+				die_again();
+			} else {
+				echo '<meta http-equiv="refresh" content="0">';
+			}
+	    }
+	}
+
+	function fucking_die() {
+	    include("error/database.php");
+	    die_again();
+	    die();
+	}
+
+	$timeout = 2;  /* thirty seconds for timeout */
+	@$db = mysqli_init();
+	@$db->options( MYSQLI_OPT_CONNECT_TIMEOUT, $timeout ) || fucking_die();
+	@$db->real_connect("90.186.122.152", "mtf", "mImdfhoxdGM2mdpD", "mtf_site") || fucking_die();
+
+
+	//$db = @mysqli_connect("90.186.122.152", "mtf", "mImdfhoxdGM2mdpD", "mtf_site");
 
 	if (!$db) {
 	    include("error/database.php");
