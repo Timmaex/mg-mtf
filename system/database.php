@@ -4,13 +4,10 @@
 
 	session_start();
 
-	$db = mysqli_connect("90.186.122.152", "mtf", "mImdfhoxdGM2mdpD", "mtf_site");
+	$db = @mysqli_connect("90.186.122.152", "mtf", "mImdfhoxdGM2mdpD", "mtf_site");
 
 	if (!$db) {
-	    echo "Fehler: konnte nicht mit MySQL verbinden." . PHP_EOL;
-	    echo "Debug-Fehlernummer: " . mysqli_connect_errno() . PHP_EOL;
-	    echo "Debug-Fehlermeldung: " . mysqli_connect_error() . PHP_EOL;
-	    include("error/404.php");
+	    include("error/database.php");
 	    die();
 	}
 	function runQuery($sql) {
