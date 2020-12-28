@@ -245,7 +245,7 @@
     </p>
 	</div>
 	<div class="buttons-container">
-		<a class="border-button" href="index" target="_blank">Hauptseite</a>
+		<a class="border-button" href="index.php" target="_blank">Hauptseite</a>
 		<a class="border-button" href="mailto:kiwontatv@web.de" target="_blank">Problem melden</a>
 	</div>
 </div>
