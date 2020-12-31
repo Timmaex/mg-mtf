@@ -5,7 +5,7 @@
     require("system/database.php");
 
     $header = "News";
-    $subheader = "Hier findest du die aktuellen MTF News.";
+    $subheader = "Hier findest du die aktuellsten MTF News.";
 
     require("system/navbar.php");
 ?>
